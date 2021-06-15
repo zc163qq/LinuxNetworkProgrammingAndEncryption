@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="description" content="C语言网络与加密" />
+
+    <meta name="author" content="TakoTakoo" />
+    <meta
+      name="keywords"
+      content="Linux,OpenSource,OperatingSystem,GNU,C语言"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+
+    <!-- Facebook Meta Tags -->
+    <meta
+      property="og:url"
+      content="https://archlinuxstudio.github.io/CNetworkEncryption/#/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="C 语言网络与加密" />
+    <meta property="og:description" content="C 语言网络与加密" />
+    <meta
+      property="og:image"
+      content="https://camo.githubusercontent.com/1259065b5077ba3ad59ce060f1662cd98198d9a819aa3ee5fa03f348a785b448/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f332f33352f5468655f435f50726f6772616d6d696e675f4c616e67756167655f6c6f676f2e7376672f38303070782d5468655f435f50726f6772616d6d696e675f4c616e67756167655f6c6f676f2e7376672e706e67"
+    />
+    <meta property="og:site_name" content="ArchLinuxStudio" />
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta property="twitter:domain" content="archlinuxstudio.github.io" />
+    <meta
+      property="twitter:url"
+      content="https://archlinuxstudio.github.io/CNetworkEncryption/#/"
+    />
+    <meta name="twitter:title" content="C 语言网络与加密" />
+    <meta name="twitter:description" content="C 语言网络与加密" />
+    <meta
+      name="twitter:image"
+      content="https://camo.githubusercontent.com/1259065b5077ba3ad59ce060f1662cd98198d9a819aa3ee5fa03f348a785b448/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f332f33352f5468655f435f50726f6772616d6d696e675f4c616e67756167655f6c6f676f2e7376672f38303070782d5468655f435f50726f6772616d6d696e675f4c616e67756167655f6c6f676f2e7376672e706e67"
+    />
+
+    <link rel="icon" href="./c.svg" />
+    <title>C 语言网络与加密</title>
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css"
+    />
+    <style>
+      .sidebar {
+        padding: 0 0 0 0;
+      }
+      .app-name {
+        padding-top: 10px;
+        background-color: rgb(255, 255, 255);
+        border-bottom: 4px solid rgb(129, 127, 127);
+      }
+      .app-name-link img {
+        width: 70%;
+      }
+      .seo-pic {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="./c.svg" alt="C 语言网络与加密" class="seo-pic" />
+    <div id="app">加载中...</div>
+    <script>
+      window.$docsify = {
+        name: 'C 语言网络与加密',
+        loadSidebar: true,
+        auto2top: true,
+        logo: './c.png',
+        topMargin: 90,
+        notFoundPage: true,
+        subMaxLevel: 4,
+        themeColor: 'rgb(85, 85, 85)',
+        repo: 'https://github.com/ArchLinuxStudio/CNetworkEncryption',
+        formatUpdated: '{YYYY}-{MM}-{DD}',
+        pagination: {
+          previousText: '上一节',
+          nextText: '下一节',
+          crossChapter: true,
+          crossChapterText: true,
+        },
+        plugins: [
+          function (hook, vm) {
+            hook.beforeEach(function (html) {
+              var url =
+                'https://github.com/ArchLinuxStudio/CNetworkEncryption/blob/master/docs/' +
+                vm.route.file;
+              var editHtml = '[📝 编辑本文](' + url + ')\n';
+
+              return (
+                '<span>更新日期 {docsify-updated}</span> ' +
+                '\n' +
+                html +
+                '\n----\n' +
+                editHtml
+              );
+            });
+          },
+        ],
+      };
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-cpp.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+    <script>
+      let props = {
+        clientID: 'e1f0ea79ea66351131ae',
+        clientSecret: '7b8509854c085a1100c8cd0b2ae958264be658fc',
+        repo: 'CProgrammingEssenceComments',
+        owner: 'ArchLinuxStudio',
+        admin: ['TakoTakoo'],
+        // facebook-like distraction free mode
+        distractionFreeMode: false,
+        id: decodeURI(location.hash.split('?')[0]),
+        proxy:
+          'https://ifuckgfw.com:7788/https://github.com/login/oauth/access_token',
+      };
+      let gitalk = new Gitalk(props);
+      // 哈希路由切换时 重新加载Gitalk
+      window.addEventListener('hashchange', onHashChange);
+      function onHashChange() {
+        props.id = decodeURI(location.hash.split('?')[0]); //如果不切分，在docsify里面的各个段落都会生成新的评论issue
+      }
+    </script>
+    <script></script>
+  </body>
+</html>
