@@ -27,9 +27,10 @@
 
 ## 参考书籍
 
-UNIX 网络编程
-
-UNIX 环境高级编程
+- Head First C
+- Linux/Unix 系统编程手册
+- UNIX 网络编程
+- UNIX 环境高级编程
 
 ## Star 历史
 

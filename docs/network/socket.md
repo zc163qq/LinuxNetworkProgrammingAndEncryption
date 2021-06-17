@@ -195,4 +195,6 @@ recvfrom 函数的各个参数含义如下所示：
 
 [pthread_server](../src/network/socket/pthread_server.c ':include')
 
+除此之外，还可以使用线程池或 Leader Follower 的方式改进使用体验。
+
 Ref: [[1]](http://c.biancheng.net/cpp/socket/)
