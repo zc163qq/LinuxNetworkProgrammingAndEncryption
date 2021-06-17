@@ -1,6 +1,6 @@
-# C 语言网络与加密 WIP <!-- {docsify-ignore-all} -->
+# Linux 网络编程与加密 WIP <!-- {docsify-ignore-all} -->
 
-本书将包含 C 语言编程中易出现的陷阱，以及较难理解的知识点。重点内容将包含实战的网络编程内容,以及创建安全通信的加密内容，提供实际的例子帮助提升对 C 语言的掌握和理解。本书针对 GNU/Linux 操作系统，全部操作均在 Arch Linux 下完成。没有安装 Linux 的同学可以先参考[Arch Linux 安装使用教程](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/)安装上 Linux。本书的定位是**较为进阶**，对于特别基础的知识，将不会赘述。
+本书将包含 Linux 网络编程与加密编程中易出现的陷阱，以及较难理解的知识点。重点内容将包含实战的网络编程内容,以及创建安全通信的加密内容，提供实际的例子帮助提升对 C 语言的掌握和理解。本书针对 GNU/Linux 操作系统，全部操作均在 Arch Linux 下完成。没有安装 Linux 的同学可以先参考[Arch Linux 安装使用教程](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/)安装上 Linux。本书的定位是**较为进阶**，对于特别基础的知识，将不会赘述。
 
 这是一个需要长期完成的文档，不要期望短期内完善。
 

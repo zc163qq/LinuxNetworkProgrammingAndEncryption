@@ -1,8 +1,8 @@
 <p align="center">
 <img width="240" height="240" align="left" style="float: left; margin: 0 10px 0 0;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/The_C_Programming_Language_logo.svg/800px-The_C_Programming_Language_logo.svg.png" alt="ArchLinuxStudio_CNetworkEncryption"/>
 </br>
-<h1>C 语言网络与加密 WIP</h1> 
-✨C语言网络与加密 | 本书的路线是分别介绍完成一个加密通讯代理软件所需要的各方面知识，并最终开发出一个此类软件。 同时也会分析各方向有价值的开源库或软件。提供在线网页文档 ✨
+<h1>Linux 网络编程与加密 WIP</h1> 
+✨Linux 网络编程与加密 | 本书的路线是分别介绍完成一个加密通讯代理软件所需要的各方面知识，并最终开发出一个此类软件。 同时也会分析各方向有价值的开源库或软件。提供在线网页文档 ✨
 
 </p>
 
