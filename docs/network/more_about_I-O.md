@@ -36,7 +36,7 @@
 
 可以看到，其可以以非阻塞的形式处理 accept 连接，读取客户端数据，以及向客户端发送数据。但是非阻塞 I/O 模式的手动实现需要轮询，这样会占用相当多的 cpu 资源。同时，在轮询间的间隔也不好掌握，所以手动实现非阻塞式 I/O 在生产中并不常见，对于较为简单的场景，阻塞式 I/O 配合多线程以及多进程更为实用。同时，如果服务端程序已经在等待一个客户端的输入，那么后续到来的客户端将被阻塞，因为此程序同时只能对一个文件描述符进行监视，这也是为什么 I/O 多路复用模型存在的重要原因。
 
-如果对上面的程序加以改动，可以用一个链表加轮询的方式，实现一个以类似 select/poll 的方式，完成同时多个客户端 socket 进行服务的程序。你可以在看完 I/O 多路服用模型后再回来品味这个程序。
+如果对上面的程序加以改动，可以用一个链表加轮询的方式，实现一个以类似 select/poll 的方式，完成同时多个客户端 socket 进行服务的程序。你可以在看完 I/O 多路复用模型后再回来品味这个程序。
 
 [none_block_server_enhance](../src/network/advanced_io/none_block_server_enhance.c ':include')
 
@@ -44,7 +44,7 @@
 
 ## I/O 多路复用模型
 
-I/O 多路复用模型最明显的好处是可以在同一个进程中监听多个文件描述符，也即一个进程同时处理多路 IO，这是前两种 I/O 模型无法实现的。I/O 多路复用模型最典型的实现分别为 select,poll 以及 epoll。本节将提供源代码分别进行描述。
+I/O 多路复用模型最明显的好处是可以在同一个进程中监听多个文件描述符，也即一个进程同时处理多路 IO。I/O 多路复用模型最典型的实现分别为 select,poll 以及 epoll。一些资料把 epoll 比作更"高档"的实现，而 select/poll 是很"low"的实现，这样是不对的，他们都有各自应用的场景，不能一概而论，比如如果套接字大多都是活跃的状态且数量没有到达很大的量级，select 的性能甚至要好过 epoll。本节将提供源代码分别进行描述。
 
 ### select
 
@@ -53,6 +53,10 @@ I/O 多路复用模型最明显的好处是可以在同一个进程中监听多�
 [select](../src/network/advanced_io/select.c ':include')
 
 ### poll
+
+poll 模型大体的流程和 select 是一致的。select 使用位图形式的 fd_set，而 poll 使用数组，我们在非阻塞模型中自行实现的方式是使用单链表。除此之外，poll 使用 revents 返回修改，所以不用像 select 一样对原始的 fdset 进行备份。
+
+[poll](../src/network/advanced_io/poll.c ':include')
 
 ### epoll
 
@@ -64,4 +68,8 @@ I/O 多路复用模型最明显的好处是可以在同一个进程中监听多�
 
 此处所说的异步 I/O 模型指的是 UNIX 规范中所描述的通用异步 I/O 机制。区别于信号驱动式的 I/O 模型，此种模型是真正的异步 I/O 实现。
 
-Ref: [[1]](https://www.bilibili.com/video/BV1pp4y1e7xN?p=6)
+---
+
+Ref:
+[[1]](https://www.bilibili.com/video/BV1pp4y1e7xN?p=6)
+[[2]](http://www.mathcs.emory.edu/~cheung/Courses/455/Syllabus/9-netw-prog/timeout6.html)

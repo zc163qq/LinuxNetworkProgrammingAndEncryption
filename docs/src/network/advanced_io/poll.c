@@ -1,16 +1,20 @@
 #include <arpa/inet.h>
+#include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
+// ulimit -n
+#define MAXNFDS 1024
+
 // 初始化服务端的监听端口。
 int initserver(int port);
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    printf("usage: ./tcpselect port\n");
+    printf("usage: ./tcppoll port\n");
     return -1;
   }
 
@@ -23,30 +27,33 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  fd_set readfdset; // 读事件的集合，包括监听socket和客户端连接上来的socket。
-  int maxfd; // readfdset中socket的最大值。
-  // 初始化结构体，把listensock添加到集合中。
-  FD_ZERO(&readfdset);
-  FD_SET(listensock, &readfdset);
+  int maxfd;                  // fds数组中需要监视的socket的大小。
+  struct pollfd fds[MAXNFDS]; // fds存放需要监视的socket。
+
+  // 初始化数组，把全部的fd设置为-1。
+  for (int ii = 0; ii < MAXNFDS; ii++)
+    fds[ii].fd = -1;
+  // 把listensock添加到数组中。
+  fds[listensock].fd = listensock;
+  // 有数据可读事件，包括新客户端的连接、客户端socket有数据可读和客户端socket断开三种情况。
+  fds[listensock].events = POLLIN;
   maxfd = listensock;
 
   while (1) {
-    // 调用select函数时，会改变socket集合的内容，所以要把socket集合保存下来，传一个临时的给select。
-    fd_set tmpfdset = readfdset;
-    int infds = select(maxfd + 1, &tmpfdset, NULL, NULL, NULL);
 
-    printf("select infds=%d\n", infds);
+    int infds = poll(fds, maxfd + 1, -1);
+    printf("poll infds=%d\n", infds);
 
     // 返回失败。
     if (infds < 0) {
-      printf("select() failed.\n");
-      perror("select()");
+      printf("poll() failed.\n");
+      perror("poll():");
       break;
     }
 
-    // 超时，在本程序中，select函数最后一个参数为空，不存在超时的情况，但以下代码还是留着。
+    // 超时。
     if (infds == 0) {
-      printf("select() timeout.\n");
+      printf("poll() timeout.\n");
       continue;
     }
 
@@ -54,42 +61,62 @@ int main(int argc, char *argv[]) {
     // 这里是客户端的socket事件，每次都要遍历整个集合，因为可能有多个socket有事件。
     for (int eventfd = 0; eventfd <= maxfd; eventfd++) {
 
-      if (FD_ISSET(eventfd, &tmpfdset) <= 0)
+      //-1说明并没有置位
+      if (fds[eventfd].fd < 0)
         continue;
 
-      // 如果发生事件的是listensock，表示有新的客户端连上来。
+      //二进制按位与如果为0,说明没有读的事件
+      if ((fds[eventfd].revents & POLLIN) == 0)
+        continue;
+
+      // 先把revents清空。
+      fds[eventfd].revents = 0;
+
       if (eventfd == listensock) {
+        // 如果发生事件的是listensock，表示有新的客户端连上来。
         struct sockaddr_in client;
         socklen_t len = sizeof(client);
-        //这里不会阻塞了
         int clientsock = accept(listensock, (struct sockaddr *)&client, &len);
+
         if (clientsock < 0) {
           printf("accept() failed.\n");
           continue;
         }
+
         printf("client(socket=%d) connected ok.\n", clientsock);
 
-        // 把新的客户端socket加入集合。
-        FD_SET(clientsock, &readfdset);
+        if (clientsock > MAXNFDS) {
+          printf("clientsock(%d)>MAXNFDS(%d)\n", clientsock, MAXNFDS);
+          close(clientsock);
+          continue;
+        }
+
+        fds[clientsock].fd = clientsock;
+        fds[clientsock].events = POLLIN;
+        fds[clientsock].revents = 0;
+
         if (maxfd < clientsock)
           maxfd = clientsock;
+
+        printf("maxfd=%d\n", maxfd);
         continue;
       } else {
         // 客户端有数据过来或客户端的socket连接被断开。
         char buffer[1024];
         memset(buffer, 0, sizeof(buffer));
+
         // 读取客户端的数据。
         ssize_t isize = read(eventfd, buffer, sizeof(buffer));
+
         // 发生了错误或socket被对方关闭。
         if (isize <= 0) {
           printf("client(eventfd=%d) disconnected.\n", eventfd);
-          close(eventfd);              // 关闭客户端的socket。
-          FD_CLR(eventfd, &readfdset); // 从集合中移去客户端的socket。
-
-          // 重新计算maxfd的值，注意，只有当eventfd==maxfd时，即移除的fd已为最大值才需要计算。
+          close(eventfd); // 关闭客户端的socket。
+          fds[eventfd].fd = -1;
+          // 重新计算maxfd的值，注意，只有当eventfd==maxfd时才需要计算。
           if (eventfd == maxfd) {
             for (int ii = maxfd; ii > 0; ii--) {
-              if (FD_ISSET(ii, &readfdset)) {
+              if (fds[ii].fd != -1) {
                 maxfd = ii;
                 break;
               }
@@ -105,6 +132,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
+
   return 0;
 }
 
@@ -136,6 +164,5 @@ int initserver(int port) {
     close(sock);
     return -1;
   }
-
   return sock;
 }
