@@ -15,7 +15,7 @@
 
 <!-- shields not support telegram online count now, use sample discord instead temporarily -->
 
-## [阅读地址](https://archlinuxstudio.github.io/CNetworkEncryption/#/)
+## [阅读地址](https://archlinuxstudio.github.io/LinuxNetworkProgrammingAndEncryption/#/)
 
 - 本书特点
 
