@@ -81,6 +81,7 @@ int main() {
       puts("clnt_sock received");
       //如accept成功，对需要使用的客户端套接字设置 O_NONBLOCK
       fcntl(clnt_sock, F_SETFL, fcntl(clnt_sock, F_GETFL, 0) | O_NONBLOCK);
+      //新建结构并将客户端套接字结构加入链表
       readNode *newNode = (readNode *)malloc(sizeof(readNode));
       newNode->fd = clnt_sock;
       newNode->next = NULL;

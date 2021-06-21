@@ -31,6 +31,8 @@
 - Linux/Unix 系统编程手册
 - UNIX 网络编程
 - UNIX 环境高级编程
+- Linux 设备驱动开发详解
+- 深入理解计算机系统
 
 ## Star 历史
 

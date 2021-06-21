@@ -87,7 +87,9 @@ epoll 模型大体的流程和 select 以及 poll 也是一致的。epoll 解决
 
 ### 信号驱动式 I/O 在网络的应用
 
-此节仅给出一个 UDP 的应用，TCP 不再举例，原因已在前面说明。
+此节先给出一个在 TCP 监听套接字的应用。注意，在处理 TCP 监听套接字时，你仍需要同时处理多个文件描述符，此时你还是需要配合使用 I/O 复用的方式，或者手动实现的非阻塞方式来处理多个文件描述符。
+
+[sig_tcp_listen](../src/network/advanced_io/sig_tcp_listen.c ':include')
 
 ## 异步 I/O 模型
 
@@ -100,6 +102,8 @@ epoll 模型大体的流程和 select 以及 poll 也是一致的。epoll 解决
 ### kernel 5.X 时代的异步模型 io_uring
 
 io_uring 是 linux 内核 5.X 时代加入的全新异步 I/O 模型，大概在 5.4 版本正式可用，在 5.7 和 5.12 版本逐渐完善，io_uring 普遍被认为是 linux 下对标 windows 的 IOCP 的、真正的异步 I/O 模型将来的趋势。io_uring 的作者同样提供了相应的库[liburing](https://archlinux.org/packages/extra/x86_64/liburing/)以简化开发。
+
+这个坑有点深，等 io_uring 更稳定了再回头填这个坑。
 
 ---
 
