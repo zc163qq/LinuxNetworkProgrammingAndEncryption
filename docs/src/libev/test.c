@@ -1,7 +1,5 @@
-// a single header file is required
 #include <ev.h>
-
-#include <stdio.h> // for puts
+#include <stdio.h>
 
 // every watcher type has its own typedef'd struct
 // with the name ev_TYPE
