@@ -91,6 +91,10 @@ epoll 模型大体的流程和 select 以及 poll 也是一致的。epoll 解决
 
 [sig_tcp_listen](../src/network/advanced_io/sig_tcp_listen.c ':include')
 
+下面再给出一个 UDP 回声客户端使用信号驱动式 I/O 的例子，例子中不再需要用轮询的方式收取数据报，在数据报到达时会收到信号，自动调用先前设置好的信号处理程序。此服务端可配合上节的 udp 客户端测试。
+
+[sig_udp_server](../src/network/advanced_io/sig_udp_server.c ':include')
+
 ## 异步 I/O 模型
 
 此处所说的异步 I/O 模型指的是 UNIX 规范中所描述的通用异步 I/O 机制。区别于信号驱动式的 I/O 模型，此种模型是真正的异步 I/O 实现。这种模型与信号驱动模型的主要区别在于：信号驱动 I/O 是由内核通知应用程序何时启动一个 I/O 操作，而异步 I/O 模型是由内核通知应用程序 I/O 操作何时完成。在 Linux 中，用户空间中的[libaio](https://archlinux.org/packages/core/x86_64/libaio/)函数库提供了对于内核异步 I/O 的调用方式，其目的是更加高效的利用 I/O 设备。除此之外，用户空间的 [glibc](https://archlinux.org/packages/core/x86_64/glibc/) 也提供了以 aio\_为前缀的一系列函数，通过多线程的方式以模拟的形式来实现异步 I/O 模型，从而不依赖于内核。在本节的最后，将讨论最新的异步 I/O 模型:io_uring。
