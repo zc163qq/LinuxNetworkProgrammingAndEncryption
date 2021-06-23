@@ -1,9 +1,11 @@
 #include <errno.h>
 #include <ev.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define PORT_NO 1234
 #define BUFFER_SIZE 1024
@@ -18,13 +20,16 @@ int main() {
   int sd;
   struct sockaddr_in addr;
   int addr_len = sizeof(addr);
-  struct ev_io w_accept;
 
   // Create server socket
   if ((sd = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket error");
     return -1;
   }
+
+  // is nonblock needed?
+  // int flags = fcntl(sd, F_GETFL, 0);
+  // fcntl(sd, F_SETFL, flags | O_NONBLOCK);
 
   int reuse = 1;
   if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(int)) == -1) {
@@ -48,14 +53,16 @@ int main() {
     return -1;
   }
 
+  struct ev_io w_accept;
   // Initialize and start a watcher to accepts client requests
   ev_io_init(&w_accept, accept_cb, sd, EV_READ);
   ev_io_start(loop, &w_accept);
 
   // Start infinite loop
-  while (1) {
-    ev_loop(loop, 0);
-  }
+  // this loop may not needed
+  // while (1) {
+  ev_loop(loop, 0);
+  // }
 
   return 0;
 }
@@ -111,6 +118,7 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
   if (read == 0) {
     // Stop and free watchet if client socket is closing
     ev_io_stop(loop, watcher);
+    close(watcher->fd);
     free(watcher);
     perror("peer might closing");
     total_clients--; // Decrement total_clients count
