@@ -87,12 +87,5 @@ int main(void) {
 exit:
 
   close(server_fd);
-
-#ifdef WIN32
-  printf("  + Press Enter to exit this program.\n");
-  fflush(stdout);
-  getchar();
-#endif
-
   return (ret);
 }

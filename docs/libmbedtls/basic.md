@@ -24,7 +24,10 @@ mbed TLS 是一个跨平台的 TLS 协议实施库，同时也是一个加密库
 
 Ref:
 
-1. [Comparison of TLS implementations](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations)
-2. [Comparison of cryptography libraries](https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries)
-3. [Arch wiki Mbed_TLS](https://wiki.archlinux.org/title/Mbed_TLS)
-4. [mbedtls 安装与入门](https://blog.csdn.net/xukai871105/article/details/72795126)
+1. [tls.mbed.org](https://tls.mbed.org/kb/how-to)
+2. [Comparison of TLS implementations](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations)
+3. [Comparison of cryptography libraries](https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries)
+4. [Arch wiki Mbed_TLS](https://wiki.archlinux.org/title/Mbed_TLS)
+5. [mbedtls 安装与入门](https://blog.csdn.net/xukai871105/article/details/72795126)
+6. [OpenSSL 简单思路和函数笔记](https://segmentfault.com/a/1190000005933931)
+7. [mbedTLS 简单思路和函数笔记](https://segmentfault.com/a/1190000005998141)
