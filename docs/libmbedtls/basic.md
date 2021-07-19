@@ -2,6 +2,8 @@
 
 mbed TLS 是一个跨平台的 TLS 协议实施库，同时也是一个加密库与 X.509 证书处理库。对比与其他 TLS 实现，其更为针对嵌入式平台，因为它的体积可以很小。在 Arch Linux 上安装包[mbedtls](https://archlinux.org/packages/community/x86_64/mbedtls/)即可使用。
 
+在编译本章代码时，需要根据需求添加-l 参数链接动态链接库，它们分别为`-lmbedtls`、`-lmbedx509`以及`-lmbedcrypto`。
+
 ## 使用 mbedtls 加密解密
 
 首先附上一个简单的使用方法，对 mbedtls 有一个初步的认识。这里使用 aes-ecb-128 对一条消息进行加密和解密，这里仅作简单演示用，不要在实际场景使用 aes-ecb-128。

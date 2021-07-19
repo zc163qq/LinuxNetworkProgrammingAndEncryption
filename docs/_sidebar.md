@@ -12,6 +12,10 @@
   - [更多 I/O 模式](/network/more_about_I-O)
   - [阅读 microsocks 的源码](/network/read_with_microsocks)
 
+- 密码学初步
+
+  - [基本组成](/cryptography/basic)
+
 - libsodium 库的应用与实践
 
   - [libsodium 初步](/libsodium/basic)
@@ -26,6 +30,7 @@
 - libmbedtls 库的应用与实践
 
   - [libmbedtls 初步](/libmbedtls/basic)
+  - [密码学工具箱](/libmbedtls/crypto)
 
 - shadowsocks-libev 的实现
 

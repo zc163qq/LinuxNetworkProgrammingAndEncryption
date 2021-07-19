@@ -1,8 +1,10 @@
 /*
  * @file
  * @brief chapter hash samples.
- * @note  测试向量来自 https://tools.ietf.org/rfc/rfc4231.txt (test case 2)
+ * @note  测试向量来自
+ * https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/SHA256.pdf
  */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,15 +15,15 @@
 static void dump_buf(char *info, uint8_t *buf, uint32_t len) {
   mbedtls_printf("%s", info);
   for (int i = 0; i < len; i++) {
-    mbedtls_printf("%s%02X%s", i % 16 == 0 ? "\n     " : " ", buf[i],
+    mbedtls_printf("%s%02X%s", i % 16 == 0 ? "\n\t" : " ", buf[i],
                    i == len - 1 ? "\n" : "");
   }
+  mbedtls_printf("\n");
 }
 
 int main(void) {
-  uint8_t mac[32];
-  char *secret = "Jefe";
-  char *msg = "what do ya want for nothing?";
+  uint8_t digest[32];
+  char *msg = "abc";
 
   mbedtls_md_context_t ctx;
   const mbedtls_md_info_t *info;
@@ -29,16 +31,15 @@ int main(void) {
   mbedtls_md_init(&ctx);
   info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
 
-  // 1 means to use HMAC
-  mbedtls_md_setup(&ctx, info, 1);
+  mbedtls_md_setup(&ctx, info, 0);
   mbedtls_printf("\n  md info setup, name: %s, digest size: %d\n",
                  mbedtls_md_get_name(info), mbedtls_md_get_size(info));
 
-  mbedtls_md_hmac_starts(&ctx, (unsigned char *)secret, strlen(secret));
-  mbedtls_md_hmac_update(&ctx, (unsigned char *)msg, strlen(msg));
-  mbedtls_md_hmac_finish(&ctx, mac);
+  mbedtls_md_starts(&ctx);
+  mbedtls_md_update(&ctx, (unsigned char *)msg, strlen(msg));
+  mbedtls_md_finish(&ctx, digest);
 
-  dump_buf("\n  md hmac-sha-256 mac:", mac, sizeof(mac));
+  dump_buf("\n  md sha-256 digest:", digest, sizeof(digest));
 
   mbedtls_md_free(&ctx);
 
