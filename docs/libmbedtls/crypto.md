@@ -32,6 +32,10 @@ CTR_DRBG 生成大素数
 
 [ctr_drbg_big_prime](../src/libmbedtls/ctr_drbg_big_prime.c ':include')
 
+## 公钥非对称密码算法 RSA
+
+[rsa_encrypt](../src/libmbedtls/rsa_encrypt.c ':include')
+
 ---
 
 Ref:
