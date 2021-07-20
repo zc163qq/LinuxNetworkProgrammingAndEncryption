@@ -21,3 +21,21 @@
 [aes128gcm](../src/libmbedtls/aes128gcm.c ':include')
 
 目前 shadowsocks 建议使用的 AEAD 模式中的 AES_128_GCM。
+
+## 伪随机数生成器
+
+CTR_DRBG 生成随机数
+
+[ctr_drbg_random](../src/libmbedtls/ctr_drbg_random.c ':include')
+
+CTR_DRBG 生成大素数
+
+[ctr_drbg_big_prime](../src/libmbedtls/ctr_drbg_big_prime.c ':include')
+
+---
+
+Ref:
+
+1. [How to add entropy sources to the entropy pool](https://tls.mbed.org/kb/how-to/add-entropy-sources-to-entropy-pool)
+2. [mbedtls entropy_poll.c source code](https://github.com/ARMmbed/mbedtls/blob/55a4d938d055a44cdac6baab1b62d1dcc804da0a/library/entropy_poll.c)
+3. [Arch wiki: Random number generation](https://wiki.archlinux.org/title/Random_number_generation)
