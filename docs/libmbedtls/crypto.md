@@ -52,6 +52,12 @@ RSA 数字签名算法基于 RSA 密钥系统实现。RSA 数字签名过程与 
 
 [rsa_sign](../src/libmbedtls/rsa_sign.c ':include')
 
+ECDSA 数字签名和 ECDH 类似，计算过程在椭圆曲线群上完成，从而较短的密钥长度即可达到 RSA 较长的密钥长度的安全强度。DSA 和 ECDSA 均只提供数字签名功能，不能用于加解密或密钥交换。
+
+[ecdsa](../src/libmbedtls/ecdsa.c ':include')
+
+注意，ECDSA 首先要对消息摘要进行结算。生成的密钥结果中重要的参数为 ctx.Q 与 ctx.d。签名结果中重要的参数为 r 和 s。
+
 ---
 
 Ref:
