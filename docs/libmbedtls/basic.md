@@ -2,25 +2,39 @@
 
 mbed TLS 是一个跨平台的 TLS 协议实施库，同时也是一个加密库与 X.509 证书处理库。对比与其他 TLS 实现，其更为针对嵌入式平台，因为它的体积可以很小。在 Arch Linux 上安装包[mbedtls](https://archlinux.org/packages/community/x86_64/mbedtls/)即可使用。
 
+本节先给出一些 mbedtls 的简单应用，使得可以得到一个较为直观的感受。
+
 在编译本章代码时，需要根据需求添加-l 参数链接动态链接库，它们分别为`-lmbedtls`、`-lmbedx509`以及`-lmbedcrypto`。
 
-## 使用 mbedtls 加密解密
+## Base64 编码
 
-首先附上一个简单的使用方法，对 mbedtls 有一个初步的认识。这里使用 aes-ecb-128 对一条消息进行加密和解密，这里仅作简单演示用，不要在实际场景使用 aes-ecb-128。
+Base64 并不是一种加解密算法，其为一种编码算法，结果没有任何保密性。但是其被广泛应用在对保密性要求不是太高的场景，也可以起到混淆视听的效果，如很多机场订阅均以 Base64 的形式下发。
+
+[base64](../src/libmbedtls/base64.c ':include')
+
+## AES_ECB_128 加密解密
+
+这里使用 aes-ecb-128 对一条消息进行加密和解密，这里仅作简单演示用，不要在实际场景使用 aes-ecb-128。
 
 [aes_ecb](../src/libmbedtls/aes_ecb.c ':include')
 
-## 使用 mbedtls 生成消息认证码
+## 遍历 mbedtls 安全套件
 
-- hmac 算法需要两个参数，一个称为秘钥，此处为 secret，另一个称为消息，此处为 buffer
-- 消息认证码保留在 digest 数组中
-- 此处 hmac 算法选择 sha256 算法作为单向散列函数，所以 hmac 的计算结果一定为 32 字节。
-- 在 mbedtls 中，消息认证码的生成分为三个步骤
-  - mbedtls_md_hmac_starts 设置密钥
-  - mbedtls_md_hmac_update 填充消息，本示例仅填充了一次
-  - mbedtls_md_hmac_finish 生成消息认证码，结果保存至 digest 中
+以下代码列出了默认情况下 mbedtls 所支持的全部用于网络通信的安全套件。可以看到默认有 127 项。拿 TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384 举例来说:
 
-[hmac](../src/libmbedtls/hmac.c ':include')
+- 密钥协商算法 ECDHE
+- 身份认证算法 ECDSA
+- 对称加密算法 AES_256
+- 消息认证算法 GCM
+- 伪随机数算法 SHA384
+
+[ciphersuite_list](../src/libmbedtls/ciphersuite_list.c ':include')
+
+## 大数运算
+
+大数运算是密码学中广泛应用的手段，是公钥密码和数字签名算法的基础。以下代码分别进行乘法运算、模指数运算以及模逆运算
+
+[bignum](../src/libmbedtls/bignum.c ':include')
 
 ---
 

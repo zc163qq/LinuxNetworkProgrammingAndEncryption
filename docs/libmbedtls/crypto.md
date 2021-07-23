@@ -12,9 +12,15 @@
 
 ## 消息认证码 HMAC / AES_128_GCM
 
-[hmac](../src/libmbedtls/hmac.c ':include')
+- hmac 算法需要两个参数，一个称为秘钥，此处为 secret，另一个称为消息，此处为 msg
+- 消息认证码保留在 mac 数组中
+- 可以看到输出中 HMAC 消息认证码长度和内部的单项散列算法 SHA256 的消息摘要长度是相等的，所以 hmac 的计算结果一定为 32 字节。
+- 在 mbedtls 中，消息认证码的生成分为三个步骤
+  - mbedtls_md_hmac_starts 设置密钥
+  - mbedtls_md_hmac_update 填充消息，本示例仅填充了一次
+  - mbedtls_md_hmac_finish 生成消息认证码，结果保存至 mac 中
 
-可以看到输出中 HMAC 消息认证码长度和内部的单项散列算法 SHA256 的消息摘要长度是相等的，均为 32 字节。
+[hmac](../src/libmbedtls/hmac.c ':include')
 
 ---
 
