@@ -178,18 +178,6 @@ int main(void) {
   }
 
   /*
-   * Start the connection with mbedtls
-   */
-  printf("\n  . Connecting to tcp/%s/%4s...", SERVER_NAME, SERVER_PORT);
-  fflush(stdout);
-
-  if ((ret = mbedtls_net_connect(&server_fd, SERVER_NAME, SERVER_PORT,
-                                 MBEDTLS_NET_PROTO_TCP)) != 0) {
-    printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
-    goto exit;
-  }
-
-  /*
    * Configuring SSL/TLS
    */
 
@@ -205,10 +193,19 @@ int main(void) {
   mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
   mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
 
-  // Set the authentication mode. Here not checking anything.
-  mbedtls_x509_crt_parse(&cacert, (unsigned char *)ca_mid_cert_pem,
-                         sizeof(ca_mid_cert_pem));
+  // Parse trusted cert
+  // ca_cert_pem is OK
+  // ca_mid_cert_pem is OK
+  // ca_self_cert_pem NOT OK
+  // https://github.com/ARMmbed/mbedtls/issues/139#issuecomment-270134402
+  mbedtls_x509_crt_parse(&cacert, (unsigned char *)ca_cert_pem,
+                         sizeof(ca_cert_pem));
+
+  // Set the authentication mode.
   mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
+
+  // Add cert in chain
+  // Similar to the concept of installing a trusted certificate in a browser
   mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
 
   // Set up the SSL context to use it.
@@ -225,6 +222,18 @@ int main(void) {
   // traffic.
   mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv,
                       NULL);
+
+  /*
+   * Start the connection with mbedtls
+   */
+  printf("\n  . Connecting to tcp/%s/%4s...", SERVER_NAME, SERVER_PORT);
+  fflush(stdout);
+
+  if ((ret = mbedtls_net_connect(&server_fd, SERVER_NAME, SERVER_PORT,
+                                 MBEDTLS_NET_PROTO_TCP)) != 0) {
+    printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
+    goto exit;
+  }
 
   /*
    * 4. Handshake

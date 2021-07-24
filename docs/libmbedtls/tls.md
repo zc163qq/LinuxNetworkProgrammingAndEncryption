@@ -1,0 +1,16 @@
+# TLS
+
+本节将实现一个搭配 TLS 实现的客户端，用以请求网页内容，这个客户端实际上用到了上一节中描述过的全部内容。首先来看一个没有使用 TLS 的客户端，它将请求一个网页。如果你掌握了网络编程部分，那么理解以下代码应该不难。
+
+[client_without_tls](../src/libmbedtls/client_without_tls.c ':include')
+
+接下来将使用 mbedtls 为此程序加入 TLS,从而可以请求在 443 端口 https 的网页。
+
+[client_with_tls_with_verify](../src/libmbedtls/client_with_tls_with_verify.c ':include')
+
+---
+
+Ref:
+
+1. [mbedtls discuss about middle cert](https://github.com/ARMmbed/mbedtls/issues/139#issuecomment-270134402)
+2. [how-to-validate-tls-certificate](https://cjting.me/2021/03/02/how-to-validate-tls-certificate/)
