@@ -8,7 +8,7 @@ set(libs
 
 ## 明确src文件
 set(src
-    ${CMAKE_CURRENT_SOURCE_DIR}/hmac.c)
+    ${CMAKE_CURRENT_SOURCE_DIR}/hmac_old.c)
 
 # 生成的可执行文件叫hmac_exec
 add_executable(hmac_exec ${src})

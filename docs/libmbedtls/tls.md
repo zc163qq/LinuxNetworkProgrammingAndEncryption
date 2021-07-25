@@ -14,3 +14,5 @@ Ref:
 
 1. [mbedtls discuss about middle cert](https://github.com/ARMmbed/mbedtls/issues/139#issuecomment-270134402)
 2. [how-to-validate-tls-certificate](https://cjting.me/2021/03/02/how-to-validate-tls-certificate/)
+3. [OpenSSL 简单思路和函数笔记](https://segmentfault.com/a/1190000005933931)
+4. [mbedTLS 简单思路和函数笔记](https://segmentfault.com/a/1190000005998141)

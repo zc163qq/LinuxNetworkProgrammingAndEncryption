@@ -12,9 +12,11 @@
   - [更多 I/O 模式](/network/more_about_I-O)
   - [阅读 microsocks 的源码](/network/read_with_microsocks)
 
-- 密码学初步
+- mbedtls 库与密码学的应用与实践
 
-  - [基本组成](/cryptography/basic)
+  - [mbedtls 初步](/libmbedtls/basic)
+  - [密码学工具箱](/libmbedtls/crypto)
+  - [TLS 客户端的实现](/libmbedtls/tls)
 
 - libsodium 库的应用与实践
 
@@ -26,12 +28,6 @@
 - libev 库的应用与实践
 
   - [libev 初步](/libev/basic)
-
-- libmbedtls 库的应用与实践
-
-  - [libmbedtls 初步](/libmbedtls/basic)
-  - [密码学工具箱](/libmbedtls/crypto)
-  - [TLS 客户端的实现](/libmbedtls/tls)
 
 - shadowsocks-libev 的实现
 
