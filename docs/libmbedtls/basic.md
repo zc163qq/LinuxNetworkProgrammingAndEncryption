@@ -19,6 +19,14 @@ mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Laye
 
 这些技术的具体实现互相组合，就形成了安全框架，如 TLS 以及 DTLS。在本章中将详细描述这些技术应如何实现。
 
+在信息安全领域，如下三点被认为是信息安全的核心基础:
+
+- 机密性(Confidentiality)
+- 完整性(Integrity)
+- 可用性(Availability)
+
+机密性确保信息未经未授权的查看与访问，这一般由加密算法来实现。完整性确保信息的内容是完整且正确的，这一般由单项散列函数来实现。可用性确保服务或信息被有授权的用户访问，这一般由数字签名以及数字证书实现。在本章中将详细描述如何确保这些信息安全基础要求。
+
 ## Base64 编码
 
 Base64 并不是一种加解密算法，其为一种编码算法，结果没有任何保密性。但是其被广泛应用在对保密性要求不是太高的场景，也可以起到混淆视听的效果，如很多机场订阅均以 Base64 的形式下发。如下代码仅仅简单的调用了 mbedtls 中 base64 编码与解码的函数，将数组和 ASCII 编码进行互相的转换。
@@ -59,3 +67,4 @@ Ref:
 3. [Comparison of cryptography libraries](https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries)
 4. [Arch wiki Mbed_TLS](https://wiki.archlinux.org/title/Mbed_TLS)
 5. [mbedtls 安装与入门](https://blog.csdn.net/xukai871105/article/details/72795126)
+6. [Confidentiality, Integrity and Availability – The CIA Triad](https://www.certmike.com/confidentiality-integrity-and-availability-the-cia-triad/)
