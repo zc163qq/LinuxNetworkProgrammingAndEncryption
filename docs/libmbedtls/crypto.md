@@ -2,9 +2,9 @@
 
 本节将对上一节提到的，密码学中六种主要的密码技术分别顺序进行描述，并同时配以此种技术中的一个或多个样例代码。
 
-## 单项散列函数 SHA256
+## 单向散列函数 SHA256
 
-单项散列函数根据消息的内容计算出消息的散列值，散列值作为消息的摘要，可以用来检查消息的完整性(Integrity)。同一个单项散列函数算法输出的散列值是固定的，不随消息长度的不同而变化。常见的单项散列算法有 MD4/5 系列与 SHA 系列。MD4/5 系列算法由于安全性问题而不应该使用，应该主要使用 SHA 系列算法。MD5 与 SHA 算法家族均基于 MD4 的基本原理设计实现，mbedtls 的单项散列通用接口均赋以 md 前缀可能就源于此。由单项散列函数的名称可知，`单项`意味着从消息的散列值反推消息本身，在安全的单项散列函数中几乎是不可能的事情。单项散列函数和其他密码技术息息相关，许多其他密码技术都用到了单项散列函数。
+单向散列函数根据消息的内容计算出消息的散列值，散列值作为消息的摘要，可以用来检查消息的完整性(Integrity)。同一个单向散列函数算法输出的散列值是固定的，不随消息长度的不同而变化。常见的单向散列算法有 MD4/5 系列与 SHA 系列。MD4/5 系列算法由于安全性问题而不应该使用，应该主要使用 SHA 系列算法。MD5 与 SHA 算法家族均基于 MD4 的基本原理设计实现，mbedtls 的单向散列通用接口均赋以 md 前缀可能就源于此。由单向散列函数的名称可知，`单向`意味着从消息的散列值反推消息本身，在安全的单向散列函数中几乎是不可能的事情。单向散列函数和其他密码技术息息相关，许多其他密码技术都用到了单向散列函数。
 
 在消息传递过程中，常将消息本身与计算出的消息散列值一同发送给对方，对方在接收到消息后计算其散列值，并与接收到的散列值比较，如果二者相同，则说明消息没有经过篡改或者产生传输错误。
 
@@ -26,21 +26,23 @@
 
 ## 消息认证码 HMAC / AES_128_GCM
 
-- hmac 算法需要两个参数，一个称为秘钥，此处为 secret，另一个称为消息，此处为 msg
-- 消息认证码保留在 mac 数组中
-- 可以看到输出中 HMAC 消息认证码长度和内部的单项散列算法 SHA256 的消息摘要长度是相等的，所以 hmac 的计算结果一定为 32 字节。
-- 在 mbedtls 中，消息认证码的生成分为三个步骤
-  - mbedtls_md_hmac_starts 设置密钥
-  - mbedtls_md_hmac_update 填充消息，本示例仅填充了一次
-  - mbedtls_md_hmac_finish 生成消息认证码，结果保存至 mac 中
+通过单向散列函数实现的消息认证码，此类方法统称为 HMAC，如 HMAC-SHA1,HMAC-SHA256 等，此种方式可以提供信息安全中的完整性与真实性的保障。另外一类方式为使用分组加密算法构造消息认证码算法，如 CMAC\GCM\CCM，如 AES_128_GCM，这种算法兼顾加密，可同时提供机密性的保障，也即常被称为的认证加密(AE)或带有关联数据的认证加密(AEAD)。
+
+HMAC 算法需要两个参数，一个称为秘钥，此处为 secret，另一个称为消息，此处为 msg，消息认证码保留在 mac 数组中。可以看到输出中 HMAC 消息认证码长度和内部的单向散列算法 SHA256 的消息摘要长度是相等的，所以 HMAC 的计算结果一定为 32 字节。在 mbedtls 中，消息认证码的生成分为三个步骤：
+
+- mbedtls_md_hmac_starts 设置密钥
+- mbedtls_md_hmac_update 填充消息，本示例仅填充了一次
+- mbedtls_md_hmac_finish 生成消息认证码，结果保存至 mac 中
+
+注意，在 mbedtls_md_setup 函数中赋值 1，为使用 HMAC。
 
 [hmac](../src/libmbedtls/hmac.c ':include')
 
 ---
 
-[aes128gcm](../src/libmbedtls/aes128gcm.c ':include')
+目前 shadowsocks 建议使用的 AEAD 模式中的 AES_128_GCM。认证加密算法可同时输出密文与消息认证码，如今已被广泛应用。
 
-目前 shadowsocks 建议使用的 AEAD 模式中的 AES_128_GCM。
+[aes128gcm](../src/libmbedtls/aes128gcm.c ':include')
 
 ## 伪随机数生成器
 
@@ -95,3 +97,4 @@ Ref:
 - [ShadowSocks 重定向攻击](http://iv4n.cc/shadowsocks/)
 - [Redirect attack - Shadowsocks 流密码的不安全因素](https://blog.rexskz.info/redirect-attack-weakness-of-ss-stream-cipher.html#toc-link-2)
 - [Block cipher mode of operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
+- [Authenticated_encryption](https://en.wikipedia.org/wiki/Authenticated_encryption)

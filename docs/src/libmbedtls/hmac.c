@@ -29,7 +29,7 @@ int main(void) {
   mbedtls_md_init(&ctx);
   info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
 
-  // 1 means to use HMAC
+  // 1 为使用 HMAC
   mbedtls_md_setup(&ctx, info, 1);
   mbedtls_printf("\n  md info setup, name: %s, digest size: %d\n",
                  mbedtls_md_get_name(info), mbedtls_md_get_size(info));
