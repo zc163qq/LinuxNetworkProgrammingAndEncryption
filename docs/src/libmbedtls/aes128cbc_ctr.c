@@ -52,6 +52,7 @@ void cipher(int type) {
   mbedtls_cipher_update(&ctx, (unsigned char *)ptx, strlen(ptx), buf, &len);
   olen += len;
 
+  // CBC模式会在此进行填充
   mbedtls_cipher_finish(&ctx, buf + len, &len);
   olen += len;
 

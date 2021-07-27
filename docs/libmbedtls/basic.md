@@ -25,7 +25,7 @@ mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Laye
 - 完整性(Integrity)
 - 可用性(Availability)
 
-机密性确保信息未经未授权的查看与访问，这一般由加密算法来实现。完整性确保信息的内容是完整且正确的，这一般由单项散列函数来实现。可用性确保服务或信息被有授权的用户访问，这一般由数字签名以及数字证书实现。在本章中将详细描述如何确保这些信息安全基础要求。
+机密性确保信息未经未授权的查看与访问，这一般由加密算法来实现。完整性确保信息的内容是完整且正确的，这一般由单项散列函数来实现。可用性确保服务或信息须保持可用状况(能用)，并能满足使用需求(够用)。在本章中将详细描述如何确保这些信息安全基础要求。
 
 ## Base64 编码
 
@@ -62,9 +62,10 @@ AES_ECB_128 是一种对称加密算法，这里使用 AES_ECB_128 对一条消�
 
 Ref:
 
-1. [tls.mbed.org Knowledge Base](https://tls.mbed.org/kb/how-to)
-2. [Comparison of TLS implementations](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations)
-3. [Comparison of cryptography libraries](https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries)
-4. [Arch wiki Mbed_TLS](https://wiki.archlinux.org/title/Mbed_TLS)
-5. [mbedtls 安装与入门](https://blog.csdn.net/xukai871105/article/details/72795126)
-6. [Confidentiality, Integrity and Availability – The CIA Triad](https://www.certmike.com/confidentiality-integrity-and-availability-the-cia-triad/)
+- [tls.mbed.org Knowledge Base](https://tls.mbed.org/kb/how-to)
+- [Comparison of TLS implementations](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations)
+- [Comparison of cryptography libraries](https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries)
+- [Arch wiki Mbed_TLS](https://wiki.archlinux.org/title/Mbed_TLS)
+- [mbedtls 安装与入门](https://blog.csdn.net/xukai871105/article/details/72795126)
+- [Confidentiality, Integrity and Availability – The CIA Triad](https://www.certmike.com/confidentiality-integrity-and-availability-the-cia-triad/)
+- [Information security](https://en.wikipedia.org/wiki/Information_security)
