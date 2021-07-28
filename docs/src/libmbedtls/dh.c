@@ -1,3 +1,7 @@
+/*
+ * 参数取自https://datatracker.ietf.org/doc/html/rfc7919
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
