@@ -33,6 +33,7 @@ int main(void) {
   size_t rlen, slen, qlen, dlen;
   memset(msg, 0x12, sizeof(msg));
 
+  //签名的两部分结果
   mbedtls_mpi r, s;
   mbedtls_ecdsa_context ctx;
   mbedtls_md_context_t md_ctx;
@@ -50,31 +51,39 @@ int main(void) {
   assert_exit(ret == 0, ret);
   mbedtls_printf("\n  . setup rng ... ok\n\n");
 
+  //进行消息摘要结算
   mbedtls_md_init(&md_ctx);
   mbedtls_md(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), msg, sizeof(msg),
              hash);
   mbedtls_printf("  1. hash msg ... ok\n");
 
+  //生成密钥对
   ret = mbedtls_ecdsa_genkey(&ctx, MBEDTLS_ECP_DP_SECP256R1,
                              mbedtls_ctr_drbg_random, &ctr_drbg);
   assert_exit(ret == 0, ret);
+
+  //写入公钥
   mbedtls_ecp_point_write_binary(&ctx.grp, &ctx.Q, MBEDTLS_ECP_PF_UNCOMPRESSED,
                                  &qlen, (unsigned char *)buf, sizeof(buf));
   dlen = mbedtls_mpi_size(&ctx.d);
-  // write behind ctx.Q
+  //在公钥后写入私钥
   mbedtls_mpi_write_binary(&ctx.d, (unsigned char *)buf + qlen, dlen);
   dump_buf("  2. ecdsa generate keypair:", (unsigned char *)buf, qlen + dlen);
 
+  //用私钥进行签名，r、s为签名的两部分结果
   ret = mbedtls_ecdsa_sign(&ctx.grp, &r, &s, &ctx.d, hash, sizeof(hash),
                            mbedtls_ctr_drbg_random, &ctr_drbg);
   assert_exit(ret == 0, ret);
   rlen = mbedtls_mpi_size(&r);
   slen = mbedtls_mpi_size(&s);
+
+  //写入签名结果r
   mbedtls_mpi_write_binary(&r, (unsigned char *)buf, rlen);
-  // write behind r
+  //在签名结果r后写入签名结果s
   mbedtls_mpi_write_binary(&s, (unsigned char *)buf + rlen, slen);
   dump_buf("  3. ecdsa generate signature:", (unsigned char *)buf, rlen + slen);
 
+  //用公钥验证签名
   ret = mbedtls_ecdsa_verify(&ctx.grp, hash, sizeof(hash), &ctx.Q, &r, &s);
   assert_exit(ret == 0, ret);
   mbedtls_printf("  4. ecdsa verify signature ... ok\n\n");
