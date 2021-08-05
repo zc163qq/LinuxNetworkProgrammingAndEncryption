@@ -16,13 +16,17 @@
 
 ## 对称加密算法 AES_128_CBC / AES_128_CTR
 
-> ECB/CBC 模式本身是脆弱的，不要在实际场景使用。除此之外，单独使用流密码模式已经被证实是不安全的，实际场景中需要使用 AEAD 模式<sup>[[1]](https://shadowsocks.org/en/wiki/Stream-Ciphers.html)</sup>。此小节仅为教学用途，不要在实际场景中使用。
-
 高级加密标准 AES 算法是当前流行的对称加密算法，用以保证消息的机密性(Confidentiality)。对称加密算法的双方使用相同的密进行加密或解密，发送方使用共享密钥加密消息并传输密文，接收方使用共享密钥解密接收到的密文。
 
-对称加密算法如 AES 单次只能处理一个固定长度的分组数据，单次只能加密或解密 128 位数据，而实际场景中被操作的消息通常都不是 128 位的整数倍(注意，如 AES_256_CBC 中的 256 指的是密钥长度，并不是分组长度，分组长度固定为 128 位)。为了解决这个问题，需要使用到`分组密码模式`与`消息填充方法`两种技术。在需要加密的明文长度超出分组长度时，就需要对明文进行分组处理，然后分别对各组进行加解密。不同分组模式的计算过程不同，安全性也不同。
+实际上，AES_128_CBC 或者 AES_128_CTR 等名称是一个组合。其中 AES 是新一代的对称加密算法，它单次只能处理一个固定长度的分组数据，其单次只能加密或解密 128 位数据。然而实际场景中被操作的消息通常都不是 128 位的整数倍，这就要引入`分组模式`，也即 CBC/CTR 等分组模式，在需要加密的明文长度超出分组长度时，对明文进行分组处理，然后分别对各组进行加解密。最后，其中的 128 指的是密钥长度，并不是分组长度，分组长度固定为 128 位，这点要尤其注意。
 
-分组模式有多种，如 ECB/CBC/CFB/OFB/CTR 等等。所有分组模式中的密码算法又分为分组密码与流密码。前两种为分组密码，后三种为流密码。流密码还有 chacha20/rc4-md5 等。
+AES 以及上一代 DES/三重 DES 均属于分组密码(block cipher)。与此对应的另一类对称加密算法为流密码(stream cipher)，常见的流密码有 chacha20/rc4 等，一次性密码本也属于流密码。
+
+对于分组密码，一般均以分组(block)为单位进行加密，比如以 64bit 或者 128bit 为单位。而流密码是对数据流进行连续的处理，一般以 1bit,8bit 或者 32bit 为单位进行。可以看到，从大小来看，分组密码处理单位较大，较为粗糙，而流密码的处理单位较小。但是在中间地带的大小，界定可能会较为模糊。除此之外，分组密码各组独立，故无需记录内部状态来记录加密进度。而流密码是对一串数据流连续处理，需要保持内部状态，这也是区分它们的一个界限。
+
+前面提到，在分组密码算法中，需要对明文进行分组操作，也即需要引入`分组模式`。常见的分组模式有 ECB/CBC/CFB/OFB/CTR 等等，不同分组模式的计算过程不同，安全性和具体实现也不同。如在 CBC 分组模式中，其分组的实现方式会造成最后一组数据填充不满最后一个分组大小的情况，这时就要用到`消息填充`这种技术，它会对不满的分组进行填充。而在 CTR 模式中，根据其实现方式，就不必进行消息的填充。
+
+> 单独使用对称加密算法与消息验证码已经被证实是不安全的。实际场景中需要使用 AEAD 模式<sup>[[1]](https://shadowsocks.org/en/wiki/Stream-Ciphers.html)</sup>。此小节仅为教学用途，不要在实际场景中使用。
 
 如下代码使用 mbedtls 的 cipher 通用接口实现 AES_128_CBC 与 AES_128_CTR 的加密过程。注意，CBC 模式进行了填充，而 CTR 模式不需要填充。代码中一个重要参数为 IV，即初始化向量(Initialization Vector)。CBC 模式中，初始化向量作用于对第一个明文/密文分组的加密/解密。注意，初始化向量要保证在每次通讯时都不同，并且是不可预测的，这样即使每次通讯被加密的消息完全相同，得到的密文也不同，在这种情况下，窃听者也无法获得明文与密文的对应关系。在 CTR 模式中，IV 也常被称作 Nounce，在 CTR 模式中，IV 配合 Counter 参与到每次加密解密的运算中。
 
@@ -146,3 +150,5 @@ Ref:
 - [Redirect attack - Shadowsocks 流密码的不安全因素](https://blog.rexskz.info/redirect-attack-weakness-of-ss-stream-cipher.html#toc-link-2)
 - [Block cipher mode of operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
 - [Authenticated_encryption](https://en.wikipedia.org/wiki/Authenticated_encryption)
+- [Stream cipher](https://en.wikipedia.org/wiki/Stream_cipher)
+- [Block cipher](https://en.wikipedia.org/wiki/Block_cipher)
