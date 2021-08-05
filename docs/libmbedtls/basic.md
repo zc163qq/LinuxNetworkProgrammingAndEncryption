@@ -1,4 +1,4 @@
-# mbedtls 初步
+# mbedtls 与密码学初步
 
 从本章开始，将陆续介绍密码学相关的知识。本章是此部分的第一章，在本章，将通过使用 mbedtls 来进行一些密码学基础知识的实践，通过实践，你也可以更好的掌握相关理论知识。
 
@@ -33,17 +33,17 @@ mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Laye
 
 首先来看使用 mbedtls 来实现 Base64 操作。Base64 并不是一种加解密算法，其为一种编码算法，可以将非 ASCII 编码数据以及 ASCII 编码数据转换为 ASCII 编码形式，但结果没有任何保密性。即便如此，由于 base64 编码的不可读性，在一些没有太多保密需求，仅仅想混淆视听的情况下，也可以使用 base64,如机场订阅的下发使用 base64 编码就有部分原因于此。如下代码仅仅简单的调用了 mbedtls 中 base64 编码与解码的函数，将不能通过 ASCII 编码表示的十六进制数组和 ASCII 编码进行互相的转换。
 
-[base64](../src/libmbedtls/base64.c ':include')
+[base64](../src/libmbedtls/basic/base64.c ':include')
 
 ## AES_ECB_128 加密解密
 
 AES_ECB_128 是一种对称加密算法，这里使用 AES_ECB_128 对一条消息进行加密和解密。这种加密算法存在安全风险，这里仅作简单演示用，不要在实际场景使用 AES_ECB_128。
 
-[aes_ecb](../src/libmbedtls/aes_ecb.c ':include')
+[aes_ecb](../src/libmbedtls/basic/aes_ecb.c ':include')
 
 ## 遍历 mbedtls 安全套件
 
-以下代码列出了默认情况下 mbedtls 所支持的全部用于网络通信的安全套件。可以看到默认有 127 项。拿 TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384 举例来说，它的各部分含义如下:
+以下代码列出了默认情况下 mbedtls 所支持的全部用于网络通信的安全套件。可以看到默认有 100 余项。拿 TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384 举例来说，它的各部分含义如下:
 
 - 安全框架 TLS
 - 密钥协商算法 ECDHE
@@ -52,13 +52,13 @@ AES_ECB_128 是一种对称加密算法，这里使用 AES_ECB_128 对一条消�
 - 消息认证算法 GCM
 - 伪随机数算法 SHA384
 
-[ciphersuite_list](../src/libmbedtls/ciphersuite_list.c ':include')
+[ciphersuite_list](../src/libmbedtls/basic/ciphersuite_list.c ':include')
 
 ## 大数运算
 
-大数运算是密码学中广泛应用的手段，是公钥密码和数字签名算法的基础。以下代码分别进行乘法运算、模指数运算以及模逆运算
+大数运算是密码学中广泛应用的手段，是公钥密码和数字签名算法的基础。以下代码分别进行乘法运算(A \* N )、模指数运算(A^E mode N)以及模逆(X = A^-1 mod N)运算
 
-[bignum](../src/libmbedtls/bignum.c ':include')
+[bignum](../src/libmbedtls/basic/bignum.c ':include')
 
 ---
 

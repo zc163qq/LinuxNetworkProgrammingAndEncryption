@@ -51,10 +51,12 @@ void cipher(int type) {
   mbedtls_cipher_set_iv(&ctx, iv, sizeof(iv));
   mbedtls_cipher_update(&ctx, (unsigned char *)ptx, strlen(ptx), buf, &len);
   olen += len;
+  printf("len: %d\n", olen);
 
   // CBC模式会在此进行填充
   mbedtls_cipher_finish(&ctx, buf + len, &len);
   olen += len;
+  printf("len: %d\n", olen);
 
   dump_buf("\n  cipher aes encrypt:", buf, olen);
 
