@@ -30,7 +30,7 @@ AES 以及上一代 DES/三重 DES 均属于分组密码(block cipher)。与此�
 
 > 单独使用对称加密算法与消息验证码已经被证实是不安全的。实际场景中需要使用 AEAD 模式<sup>[[1]](https://shadowsocks.org/en/wiki/Stream-Ciphers.html)</sup>。一种常见的 AEAD 模式为 AES_128_GCM，GCM(Galois/Counter Mode)模式是在 CTR 的分组模式基础上增加了认证功能,这种模式能在 CTR 模式生成密文的**同时**生成用于认证的消息，从而判断"密文是否通过合法的加密过程产生"。通过这种机制，即使攻击者发送伪造密文，也能够被识别。此小节仅为教学用途，不要在实际场景中使用。
 
-如下代码使用 mbedtls 的 cipher 通用接口实现 AES_128_CBC 与 AES_128_CTR 的加密过程。注意，CBC 模式进行了填充，而 CTR 模式不需要填充。代码中一个重要参数为 IV，即初始化向量(Initialization Vector)。CBC 模式中，初始化向量作用于对第一个明文/密文分组的加密/解密。注意，初始化向量要保证在每次通讯时都不同，并且是不可预测的，这样即使每次通讯被加密的消息完全相同，得到的密文也不同，在这种情况下，窃听者也无法获得明文与密文的对应关系。在 CTR 模式中，IV 也常被称作 Nounce，在 CTR 模式中，IV 配合 Counter 参与到每次加密解密的运算中。
+如下代码使用 mbedtls 的 cipher 通用接口实现 AES_128_CBC 与 AES_128_CTR 的加密过程。注意，CBC 模式进行了填充，而 CTR 模式不需要填充。代码中一个重要参数为 IV，即初始化向量(Initialization Vector)。CBC 模式中，初始化向量作用于对第一个明文/密文分组的加密/解密。注意，初始化向量要保证在每次通讯时都不同，并且是不可预测的，这样即使每次通讯被加密的消息完全相同，得到的密文也不同，在这种情况下，窃听者也无法获得明文与密文的对应关系。在 CTR 模式中，IV 也常被称作 Nonce，在 CTR 模式中，Nonce 配合 Counter 参与到每次加密解密的运算中。与 IV 相比，Nonce 可以不随机或伪随机，但一定不能重复。
 
 [aes128cbc_ctr](../src/libmbedtls/toolbox/aes128cbc_ctr.c ':include')
 
@@ -154,3 +154,4 @@ Ref:
 - [Authenticated_encryption](https://en.wikipedia.org/wiki/Authenticated_encryption)
 - [Stream cipher](https://en.wikipedia.org/wiki/Stream_cipher)
 - [Block cipher](https://en.wikipedia.org/wiki/Block_cipher)
+- [AES 加密模式 填充方法 选择指南](http://www.cxyzjd.com/article/u012088909/108688456)
