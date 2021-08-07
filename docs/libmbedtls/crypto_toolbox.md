@@ -18,7 +18,7 @@
 
 高级加密标准 AES 算法是当前流行的对称加密算法，用以保证消息的机密性(Confidentiality)。对称加密算法的双方使用相同的密进行加密或解密，发送方使用共享密钥加密消息并传输密文，接收方使用共享密钥解密接收到的密文。
 
-实际上，AES_128_CBC 或者 AES_128_CTR 等名称是一个组合。其中 AES 是新一代的对称加密算法，它单次只能处理一个固定长度的分组数据，其单次只能加密或解密 128 位数据。然而实际场景中被操作的消息通常都不是 128 位的整数倍，这就要引入`分组模式`，也即 CBC/CTR 等分组模式，在需要加密的明文长度超出分组长度时，对明文进行分组处理，然后分别对各组进行加解密。最后，其中的 128 指的是密钥长度，并不是分组长度，分组长度固定为 128 位，这点要尤其注意。
+实际上，AES_128_CBC 或者 AES_128_CTR 等名称是一个组合。其中 AES 是新一代的对称加密算法，它单次只能处理一个固定长度的分组数据，其单次只能加密或解密 128 位数据。然而实际场景中被操作的消息通常都不是仅仅有 128 位，这就要引入`分组模式`，也即 CBC/CTR 等分组模式，在需要加密的明文长度超出分组长度时，对明文进行分组处理，然后分别对各组进行加解密。最后，其中的 128 指的是密钥长度，并不是分组长度，分组长度固定为 128 位，这点要尤其注意。
 
 AES 以及上一代 DES/三重 DES 均属于分组密码(block cipher)。与此对应的另一类对称加密算法为流密码(stream cipher)，常见的流密码有 chacha20/rc4 等，一次性密码本也属于流密码。
 
@@ -28,17 +28,17 @@ AES 以及上一代 DES/三重 DES 均属于分组密码(block cipher)。与此�
 
 除此之外，如在 CBC 等经典分组模式中，其分组的实现方式会造成最后一组数据填充不满最后一个分组大小的情况，这时就要用到`消息填充`这种技术，它会对不满的分组进行填充。而在 CTR 等使用分组密码来实现的流密码模式中，根据其实现方式，就不必进行消息的填充。
 
-> 单独使用对称加密算法与消息验证码已经被证实是不安全的。实际场景中需要使用 AEAD 模式<sup>[[1]](https://shadowsocks.org/en/wiki/Stream-Ciphers.html)</sup>。一种常见的 AEAD 模式为 AES_128_GCM，GCM(Galois/Counter Mode)模式是在 CTR 的分组模式基础上增加了认证功能,这种模式能在 CTR 模式生成密文的**同时**生成用于认证的消息，从而判断"密文是否通过合法的加密过程产生"。通过这种机制，即使攻击者发送伪造密文，也能够被识别。此小节仅为教学用途，不要在实际场景中使用。
+> 单独使用对称加密算法与消息验证码的简单结合已经被证实是不安全的。实际场景中需要使用 AEAD 模式<sup>[[1]](https://shadowsocks.org/en/wiki/Stream-Ciphers.html)</sup>，这种模式中，使用新的算法在内部同时实现加密和认证，而不是简单结合加密与认证。一种常见的 AEAD 模式为 AES_128_GCM，GCM(Galois/Counter Mode)模式是在 CTR 的分组模式基础上增加了认证功能,这种模式能在 CTR 模式生成密文的**同时**生成用于认证的消息，从而判断"密文是否通过合法的加密过程产生"。通过这种机制，即使攻击者发送伪造密文，也能够被识别。此小节仅为教学用途，不要在实际场景中使用。
 
-如下代码使用 mbedtls 的 cipher 通用接口实现 AES_128_CBC 与 AES_128_CTR 的加密过程。注意，CBC 模式进行了填充，而 CTR 模式不需要填充。代码中一个重要参数为 IV，即初始化向量(Initialization Vector)。CBC 模式中，初始化向量作用于对第一个明文/密文分组的加密/解密。注意，初始化向量要保证在每次通讯时都不同，并且是不可预测的，这样即使每次通讯被加密的消息完全相同，得到的密文也不同，在这种情况下，窃听者也无法获得明文与密文的对应关系。在 CTR 模式中，IV 也常被称作 Nonce，在 CTR 模式中，Nonce 配合 Counter 参与到每次加密解密的运算中。与 IV 相比，Nonce 可以不随机或伪随机，但一定不能重复。
+如下代码使用 mbedtls 的 cipher 通用接口实现 AES_128_CBC 与 AES_128_CTR 的加密过程。注意，CBC 模式进行了填充，而 CTR 模式不需要填充。代码中一个重要参数为 IV，即初始化向量(Initialization Vector)。CBC 模式中，初始化向量作用于对第一个明文/密文分组的加密/解密。注意，初始化向量要保证在每次通讯时都不同，并且是不可预测的，这样即使每次通讯被加密的消息完全相同，得到的密文也不同，在这种情况下，窃听者也无法获得明文与密文的对应关系。在 CTR 模式中，IV 也常被称作`一次性整数 Nonce`，在 CTR 模式中，Nonce 配合 Counter 参与到每次加密解密的运算中。与 IV 相比，Nonce 可以不随机或伪随机，但一定不能重复。
 
 [aes128cbc_ctr](../src/libmbedtls/toolbox/aes128cbc_ctr.c ':include')
 
 ## 消息认证码 HMAC / AES_128_GCM
 
-通过单向散列函数实现的消息认证码，此类方法统称为 HMAC，如 HMAC-SHA1,HMAC-SHA256 等。另外一类方式为使用分组加密模式构造消息认证码算法，如 CBC-MAC\CMAC 等。最后，流密码与公钥非对称密码也可用来实现消息认证码。以上这些方法可以提供信息安全中的完整性与真实性(认证机制)的保障。
+消息验证码除了可以像单向散列函数一样验证数据完整性，还可以验证对方的真实性。与单向散列函数不同的是，除了输入消息意外，消息验证码通讯双方还需要一个共享密钥。
 
-最后，更重要的是应用更广泛的 AE(Authenticated Encryption)/AEAD(Authenticated Encryption with Associated Data) 加密认证模式，如 AES_128_GCM。不同于单独的消息认证码，这种算法兼顾真实性与完整性，还可同时提供机密性的保障。GCM 使用 CTR 模式进行加密，同时使用散列函数 GHASH 进行 MAC 值计算。在 CTR 加密与 MAC 值计算时，使用的是相同的密钥。
+通过单向散列函数实现的消息认证码，此类方法统称为 HMAC，如 HMAC-SHA1,HMAC-SHA256 等。另外一类方式为使用分组加密模式构造消息认证码算法，如 CBC-MAC\CMAC 等，分组密码的密钥可以同时作为消息验证码中的共享密钥。最后，流密码与公钥非对称密码也可用来实现消息认证码。以上这些方法可以提供信息安全中的完整性与真实性(认证机制)的保障。
 
 HMAC 算法需要两个参数，一个称为秘钥，此处为 secret，另一个称为消息，此处为 msg，消息认证码保留在 mac 数组中。可以看到输出中 HMAC 消息认证码长度和内部的单向散列算法 SHA256 的消息摘要长度是相等的，所以 HMAC 的计算结果一定为 32 字节。在 mbedtls 中，消息认证码的生成分为三个步骤：
 
@@ -48,13 +48,28 @@ HMAC 算法需要两个参数，一个称为秘钥，此处为 secret，另一�
 
 注意，在 mbedtls_md_setup 函数中赋值 1，为使用 HMAC。
 
-[hmac](../src/libmbedtls/hmac.c ':include')
+[hmac](../src/libmbedtls/toolbox/hmac.c ':include')
 
 ---
 
-目前 shadowsocks 建议使用的 AEAD 模式中的 AES_128_GCM。认证加密算法可同时输出密文与消息认证码，如今已被广泛应用。
+最后，更重要的是应用更广泛的 AE(Authenticated Encryption)/AEAD(Authenticated Encryption with Associated Data) 加密认证模式，如 AES_128_GCM 与 AES_128_CCM。不同于单独的消息认证码，这种算法兼顾真实性与完整性，还可同时提供机密性的保障。目前 shadowsocks 建议使用的 AEAD 模式中的 AES_128_GCM 、 AES_256_GCM 与 CHACHA20_POLY1305。认证加密算法可同时输出密文与消息认证码，如今已被广泛应用。
 
-[aes128gcm](../src/libmbedtls/aes128gcm.c ':include')
+CCM 使用 CBC-MAC 算法以及 CTR 模式。在认证过程，对格式化后的数据进行 CBC-MAC 运算，得到消息认证码，然后对消息认证码进行 CTR 模式加密得到最终的消息验证码结果。同时进行明文的加密过程，最终将两个过程中生成的密文与消息验证码作为最终输出结果。
+
+GCM 使用 GHASH 算法以及 GCTR 模式。GCM 首先使用 GCTR 对明文进行加密得到密文，随后将密文以及附加数据送入 GHASH 函数运算，最后再将运算结果用 GCTR 进行加密得到最终的消息认证码。在 CTR 加密与 MAC 值计算时，使用的是相同的密钥。
+
+GCM 与 CCM 算法均基于 CTR 模式实现，由于 CTR 模式无需填充消息，且可以并行计算，使得基于 CTR 的认证加密方案成为当前最高效的模式。因为它们的高效性和安全性，在很多安全协议和应用协议中都应用广泛，如 TLS1.3 中仅保留了基于 GCM/CCM 的认证加密算法。
+
+如下代码实现了一个 AES_128_GCM 的加密、解密、验证过程。需要注意的是，解密接口仅输出明文，认证结果通过返回值判断。CCM 的使用方式与 GCM 非常类似，只需将其中的模式改为 MBEDTLS_CIPHER_AES_128_CCM 即可。其中几个重要参数如下:
+
+- 明文 PT
+- 密钥 KEY
+- 初始化向量 IV
+- 相关数据 ADD
+- 密文 CT
+- 消息认证码 TAG
+
+[aes128gcm](../src/libmbedtls/toolbox/aes128gcm.c ':include')
 
 ## 伪随机数生成器
 
@@ -155,3 +170,5 @@ Ref:
 - [Stream cipher](https://en.wikipedia.org/wiki/Stream_cipher)
 - [Block cipher](https://en.wikipedia.org/wiki/Block_cipher)
 - [AES 加密模式 填充方法 选择指南](http://www.cxyzjd.com/article/u012088909/108688456)
+- [Galois/Counter Mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode)
+- [authenticated encryption](https://xianmu.github.io/posts/2017-09-13-authenticated-encryption.html)

@@ -22,7 +22,7 @@
     Key = c939cc13397c1d37de6ae0e1cb7c423c
     IV  = b3d8cc017cbb89b39e0f67e2
     PT  = c3b3c41f113a31b73d9a5cd432103069
-    AAD = 24825602bd12a984e0092d3e448eda5f
+    ADD = 24825602bd12a984e0092d3e448eda5f
     CT  = 93fe7d9e9bfd10348a5606e5cafa7354
     Tag = 0032a1dc85f1c9786925a2e71d8272dd
 */
