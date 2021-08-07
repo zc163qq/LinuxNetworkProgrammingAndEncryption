@@ -73,15 +73,40 @@ GCM 与 CCM 算法均基于 CTR 模式实现，由于 CTR 模式无需填充消�
 
 ## 伪随机数生成器
 
-CTR_DRBG 是一种常用的伪随机数生成算法，它使用 AES-256 为生成器的基础算法，可以将其理解为一个加密过程，加密的结果为期望的随机数序列。
+随机数之所以重要，是因为其在很多场景中都发挥重要作用：
 
-使用 CTR_DRBG 生成随机数时，基础流程是首先使用一个强熵源，硬件真随机数发生器一般被定义为强熵源。在 linux 上，mbedtls 默认使用/dev/urandom 作为强熵源，注意，如今/dev/random 和 /dev/urandom 已经近乎相似。如果某个平台没有默认的强熵源，则需要使用 mbedtls_entropy_add_source 函数进行添加自定义强熵源。在 mbedtls_ctr_drbg_seed 生成种子后，最后使用 mbedtls_ctr_drbg_random 生成随机数。
+- 在对称密码与消息认证码中用于生成密钥
+- 在公钥密码与数字签名中生成密钥对
+- 在分组密码的多种模式中生成初始化向量
+- 在 CTR 模式以及防御重放攻击时生成 Nonce
+- 在基于口令的密码模式中(PBE, Password Based Encryption)生成盐
+- ...
 
-[ctr_drbg_random](../src/libmbedtls/ctr_drbg_random.c ':include')
+随机数从宽松到严格分为如下三类，更严格的分类具备更宽松的分类的性质：
 
-使用 CTR_DRBG 生成大素数:
+- 随机性：不存在统计学偏差，是完全杂乱的数列。仅具备随机性的随机数不能用于密码学领域。
+- 不可预测性：不能从过去的数列推测出下一个出现的数。比如可用单向散列函数的单向性和密码的机密性保证此性质。具备不可预测性即可用于密码学领域。
+- 不可重现性：除非将数列本身保存下来，否则不能重现相同的数列。仅靠软件无法实现此性质，因为计算机本身仅具备有限的内部状态，在经过某个长度的周期后定会出现重复。要实现不可重现性，需要从不可重现的无力现象提取信息，如用户鼠标移动，温度声音变化，热噪声变化等。这种随机数称为真随机数。
 
-[ctr_drbg_big_prime](../src/libmbedtls/ctr_drbg_big_prime.c ':include')
+注意，一些编程语言通常都会提供用于生成随机数列的方法或函数，使用时一定需要注意查询其是否具备不可预测性，来用于密码学领域。
+
+通过硬件生成的，无法预测和重现的自然现象生成的是真随机数，这种硬件设备称为随机数生成器(RNG, Random Number Generator)。而生成随机数的软件称为伪随机数生成器(PRN, Pseudo Random Number Generator)，因为软件无法生成真的随机数，所以叫做"伪"。
+
+伪随机数生成器的流程一般为用一个硬件强熵源，生成真随机数种子。随后伪随机数生成器根据内部状态和种子生成伪随机数序列，最后改变内部状态。需要注意，内部状态与种子需要保密。
+
+CTR_DRBG (CTR Deterministic Random Bit Generator)是一种常用的伪随机数生成算法，它使用 AES-256 分组密码的 CTR 模式作为基础算法，可以将其理解为一个加密过程，加密的结果为期望的随机数序列。
+
+使用 CTR_DRBG 生成随机数时，基础流程是首先使用一个强熵源，硬件真随机数发生器一般被定义为强熵源。在 linux 上，mbedtls 默认使用/dev/urandom 作为强熵源，注意，如今/dev/random 和 /dev/urandom 已经近乎相似。如果某个平台没有默认的强熵源，则需要使用 mbedtls_entropy_add_source 函数进行添加自定义强熵源。除了熵源，还需要一个自定义字符串对种子畸形初始化，在 mbedtls_ctr_drbg_seed 生成种子后，最后使用 mbedtls_ctr_drbg_random 生成随机数。
+
+[ctr_drbg_random](../src/libmbedtls/toolbox/ctr_drbg_random.c ':include')
+
+---
+
+在很多方面，如密钥生成、素数生成及检测均依赖随机数模块，如下代码是一个使用 CTR_DRBG 生成大素数的例子，这里为生成一个 256 字节的大素数，并进行素性检测。由于此处素数长度较大，因此可能需要较长时间生成。
+
+可以看到，首先需要初始化两个大数结构体 P 和 Q,其中 P 为生成的素数结果，Q=(P-1)/2,用于素性检测。在这个例子中也可以看到大数操作的例子。在 mbedtls_mpi_gen_prime 中，flag 标志位设为 1 则保证(P-1)/2 也为素数。
+
+[ctr_drbg_big_prime](../src/libmbedtls/toolbox/ctr_drbg_big_prime.c ':include')
 
 ## 公钥非对称密码算法 RSA
 
