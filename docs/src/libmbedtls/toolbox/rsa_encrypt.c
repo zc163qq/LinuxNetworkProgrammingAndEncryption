@@ -93,6 +93,7 @@ int main(void) {
                                   sizeof(out));
   assert_exit(ret == 0, ret);
 
+  //'\0'截断
   out[olen] = 0;
   mbedtls_printf("\n  3. RSA decryption ... ok\n     %s\n", out);
 
