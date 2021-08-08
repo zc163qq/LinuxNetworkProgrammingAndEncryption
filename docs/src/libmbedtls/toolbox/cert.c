@@ -45,9 +45,11 @@ int main(void) {
   mbedtls_x509_crt_init(&cert);
   mbedtls_x509_crt_init(&cacert);
 
+  //用户证书
   ret = mbedtls_x509_crt_parse(&cert, (unsigned char *)bob_cert,
                                sizeof(bob_cert));
   assert_exit(ret == 0, ret);
+  // CA证书
   ret = mbedtls_x509_crt_parse(&cacert, (unsigned char *)ca_cert,
                                sizeof(ca_cert));
   assert_exit(ret == 0, ret);
