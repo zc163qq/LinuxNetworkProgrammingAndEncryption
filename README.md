@@ -7,7 +7,7 @@
 </p>
 
 [![Badge](https://img.shields.io/badge/link-CProgrammingEssence-%230088cc.svg)](https://archlinuxstudio.github.io/CNetworkEncryption)
-[![Join telegram community and chat about arch linux](https://img.shields.io/discord/308323056592486420?label=&logo=telegram&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&cacheSeconds=60)](https://t.me/kdwu1fan)
+[![Join telegram community and chat about arch linux](https://img.shields.io/discord/628978428019736619?label=&logo=telegram&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&cacheSeconds=60)](https://t.me/kdwu1fan)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FArchLinuxStudio%2FCProgrammingEssence&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![Lines](https://img.shields.io/tokei/lines/github/ArchLinuxStudio/CNetworkEncryption)](https://img.shields.io/tokei/lines/github/ArchLinuxStudio/CNetworkEncryption)
@@ -17,13 +17,12 @@
 
 ## [阅读地址](https://archlinuxstudio.github.io/LinuxNetworkProgrammingAndEncryption/#/)
 
-- 本书特点
+为推动自由软件运动而撰写的 Linux 网络加密教程。你可以通过本教程学会:
 
-  - Linux 二次元电报群:[篝ノ雾枝的咕咕小屋](https://t.me/kdwu1fan)。
-  - 无废话，只给出应当掌握的部分，不会面面俱到。C 语言博大精深，如有错误欢迎直接指出。
-  - 本书使用 docsify 以及 gitalk 开发，并且网站源码全部开源，可放心留言讨论。
-  - 只要 C 语言依旧活跃，就会一直更新。鼓励志愿者提交更新。
-  - 本书仅支持 Linux x86_64 环境，处理器为 i7 6700k。根据最新版的 GCC 与 Glibc 更新内容。
+- Linux 网络编程的相关知识
+- 密码学组建库 mbedtls 以及 sodium 的使用
+- 如何实现一个 TLS 的网页请求客户端
+- 将各项网络、密码学技术组合，实现互联网的自由访问
 
 ## 参考书籍
 
