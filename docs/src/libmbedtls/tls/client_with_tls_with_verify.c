@@ -236,7 +236,7 @@ int main(void) {
   }
 
   /*
-   * 4. Handshake
+   * Handshake
    */
   mbedtls_printf("  . Performing the SSL/TLS handshake...");
   fflush(stdout);
