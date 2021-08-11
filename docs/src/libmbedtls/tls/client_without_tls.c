@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 #define SERVER_PORT 80
-#define SERVER_NAME "www.baidu.com"
+#define SERVER_NAME "www.google.com"
 #define GET_REQUEST "GET / HTTP/1.0\r\n\r\n"
 
 int main(void) {

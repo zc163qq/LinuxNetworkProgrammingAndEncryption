@@ -19,7 +19,6 @@ int main() {
   struct ev_loop *loop = ev_default_loop(0);
   int sd;
   struct sockaddr_in addr;
-  int addr_len = sizeof(addr);
 
   // Create server socket
   if ((sd = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
@@ -48,7 +47,7 @@ int main() {
   }
 
   // Start listing on the socket
-  if (listen(sd, 2) < 0) {
+  if (listen(sd, SOMAXCONN) < 0) {
     perror("listen error");
     return -1;
   }
@@ -116,7 +115,7 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
   }
 
   if (read == 0) {
-    // Stop and free watchet if client socket is closing
+    // Stop and free watcher if client socket is closing
     ev_io_stop(loop, watcher);
     close(watcher->fd);
     free(watcher);

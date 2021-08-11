@@ -29,3 +29,4 @@ Ref:
 
 1. [SIP002-URI-Scheme](https://shadowsocks.org/en/wiki/SIP002-URI-Scheme.html)
 2. [SIP008-Online-Configuration-Delivery](https://shadowsocks.org/en/wiki/SIP008-Online-Configuration-Delivery.html)
+3. [ss_subscribe_to_surge.js](https://gist.github.com/BirkhoffLee/cba0f8a3cfe5daa452f77383d92e26bd)
