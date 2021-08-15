@@ -58,7 +58,12 @@ int main(void) {
   assert_exit(ret == 0, ret);
   mbedtls_printf("\n  . setup rng ... ok\n");
 
-  ret = mbedtls_ctr_drbg_random(&ctr_drbg, random, sizeof(random));
+  do {
+    ret = mbedtls_ctr_drbg_random(&ctr_drbg, random, sizeof(random));
+    printf("\n\nret:%d\n\n", ret);
+    printf("\n\nstrlen(random):%lu\n\n", strlen((char *)random));
+  } while (strlen((char *)random) < 64);
+
   assert_exit(ret == 0, ret);
   dump_buf("\n  . generate 64 byte random data ... ok", random, sizeof(random));
 
