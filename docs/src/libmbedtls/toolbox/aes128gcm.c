@@ -44,11 +44,15 @@ int main(void) {
   mbedtls_cipher_setkey(&ctx, (const unsigned char *)key, strlen(key) * 8,
                         MBEDTLS_ENCRYPT);
 
-  mbedtls_cipher_auth_encrypt(&ctx, (const unsigned char *)iv, strlen(iv),
-                              (const unsigned char *)add, strlen(add),
-                              (const unsigned char *)input, strlen(input),
-                              output, &len, tag_buf, 16);
-  printf("encrypt:");
+  mbedtls_cipher_auth_encrypt_ext(&ctx, (const unsigned char *)iv, strlen(iv),
+                                  (const unsigned char *)add, strlen(add),
+                                  (const unsigned char *)input, strlen(input),
+                                  output, 64, &len, 16);
+
+  // detach tag
+  memcpy(tag_buf, output + (len - 16), 16);
+
+  printf("encrypt and tag data:");
   for (int i = 0; i < len; i++) {
     char str[3];
     sprintf(str, "%02x", (int)output[i]);
@@ -63,9 +67,10 @@ int main(void) {
 
   mbedtls_cipher_setkey(&ctx, (const unsigned char *)key, strlen(key) * 8,
                         MBEDTLS_DECRYPT);
-  int ret = mbedtls_cipher_auth_decrypt(
+
+  int ret = mbedtls_cipher_auth_decrypt_ext(
       &ctx, (const unsigned char *)iv, strlen(iv), (const unsigned char *)add,
-      strlen(add), output, len, fin, &len, tag_buf, 16);
+      strlen(add), output, len, fin, 64, &len, 16);
 
   assert_exit(ret == 0, ret);
   printf("\ndecrypt:");
