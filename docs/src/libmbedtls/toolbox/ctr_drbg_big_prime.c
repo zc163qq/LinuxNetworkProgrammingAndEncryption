@@ -7,6 +7,8 @@
 #include <mbedtls/entropy.h>
 #include <mbedtls/platform.h>
 
+// https://stackoverflow.com/questions/6325576/how-many-iterations-of-rabin-miller-should-i-use-for-cryptographic-safe-primes
+
 #define assert_exit(cond, ret)                                                 \
   do {                                                                         \
     if (!(cond)) {                                                             \
@@ -53,7 +55,7 @@ int main(void) {
   ret = mbedtls_mpi_div_int(&Q, NULL, &Q, 2);
   assert_exit(ret == 0, ret);
 
-  ret = mbedtls_mpi_is_prime(&Q, mbedtls_ctr_drbg_random, &ctr_drbg);
+  ret = mbedtls_mpi_is_prime_ext(&Q, 64, mbedtls_ctr_drbg_random, &ctr_drbg);
   assert_exit(ret == 0, ret);
   mbedtls_printf("\n  . Verifying that Q = (P-1)/2 is prime ... ok\n");
 
