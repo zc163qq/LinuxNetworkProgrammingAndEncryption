@@ -63,16 +63,17 @@ int main(void) {
   assert_exit(ret == 0, ret);
 
   //写入公钥
-  mbedtls_ecp_point_write_binary(&ctx.grp, &ctx.Q, MBEDTLS_ECP_PF_UNCOMPRESSED,
-                                 &qlen, (unsigned char *)buf, sizeof(buf));
-  dlen = mbedtls_mpi_size(&ctx.d);
+  mbedtls_ecp_point_write_binary(&ctx.private_grp, &ctx.private_Q,
+                                 MBEDTLS_ECP_PF_UNCOMPRESSED, &qlen,
+                                 (unsigned char *)buf, sizeof(buf));
+  dlen = mbedtls_mpi_size(&ctx.private_d);
   //在公钥后写入私钥
-  mbedtls_mpi_write_binary(&ctx.d, (unsigned char *)buf + qlen, dlen);
+  mbedtls_mpi_write_binary(&ctx.private_d, (unsigned char *)buf + qlen, dlen);
   dump_buf("  2. ecdsa generate keypair:", (unsigned char *)buf, qlen + dlen);
 
   //用私钥进行签名，r、s为签名的两部分结果
-  ret = mbedtls_ecdsa_sign(&ctx.grp, &r, &s, &ctx.d, hash, sizeof(hash),
-                           mbedtls_ctr_drbg_random, &ctr_drbg);
+  ret = mbedtls_ecdsa_sign(&ctx.private_grp, &r, &s, &ctx.private_d, hash,
+                           sizeof(hash), mbedtls_ctr_drbg_random, &ctr_drbg);
   assert_exit(ret == 0, ret);
   rlen = mbedtls_mpi_size(&r);
   slen = mbedtls_mpi_size(&s);
@@ -84,7 +85,8 @@ int main(void) {
   dump_buf("  3. ecdsa generate signature:", (unsigned char *)buf, rlen + slen);
 
   //用公钥验证签名
-  ret = mbedtls_ecdsa_verify(&ctx.grp, hash, sizeof(hash), &ctx.Q, &r, &s);
+  ret = mbedtls_ecdsa_verify(&ctx.private_grp, hash, sizeof(hash),
+                             &ctx.private_Q, &r, &s);
   assert_exit(ret == 0, ret);
   mbedtls_printf("  4. ecdsa verify signature ... ok\n\n");
 
