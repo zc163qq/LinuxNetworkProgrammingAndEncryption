@@ -21,6 +21,8 @@
   } while (0)
 
 #define GENERATOR "2"
+
+// 2048bit prime
 #define T_P                                                                    \
   "FFFFFFFFFFFFFFFFADF85458A2BB4A9AAFDC5620273D3CF1D8B9C583CE2D3695"           \
   "A9E13641146433FBCC939DCE249B3EF97D2FE363630C75D8F681B202AEC4617A"           \
@@ -60,13 +62,12 @@ int main(void) {
   assert_exit(ret == 0, ret);
   mbedtls_printf("\n  . setup rng ... ok\n\n");
 
-  mbedtls_mpi_read_string(&dhm_srv.P, 16, T_P);
-  mbedtls_mpi_read_string(&dhm_srv.G, 10, GENERATOR);
-  dhm_srv.len = mbedtls_mpi_size(&dhm_srv.P);
+  mbedtls_mpi_read_string(&dhm_srv.private_P, 16, T_P);
+  mbedtls_mpi_read_string(&dhm_srv.private_G, 10, GENERATOR);
 
-  mbedtls_mpi_read_string(&dhm_cli.P, 16, T_P);
-  mbedtls_mpi_read_string(&dhm_cli.G, 10, GENERATOR);
-  dhm_cli.len = mbedtls_mpi_size(&dhm_cli.P);
+  mbedtls_mpi_read_string(&dhm_cli.private_P, 16, T_P);
+  mbedtls_mpi_read_string(&dhm_cli.private_G, 10, GENERATOR);
+
   mbedtls_printf("  1. dh generate 2048 bit prime(G, P) ... ok\n");
 
   ret = mbedtls_dhm_make_public(&dhm_srv, 256, srv_pub, sizeof(srv_pub),
