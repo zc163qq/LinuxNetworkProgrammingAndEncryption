@@ -28,28 +28,28 @@ static void dump_rsa_key(mbedtls_rsa_context *ctx) {
   size_t olen;
   char buf[516];
   mbedtls_printf("\n  +++++++++++++++++ rsa keypair +++++++++++++++++\n\n");
-  mbedtls_mpi_write_string(&ctx->N, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_N, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("N: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->E, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_E, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("E: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->D, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_D, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("D: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->P, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_P, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("P: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->Q, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_Q, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("Q: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->DP, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_DP, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("DP: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->DQ, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_DQ, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("DQ: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->QP, 16, buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_QP, 16, buf, sizeof(buf), &olen);
   mbedtls_printf("QP: %s\n", buf);
   mbedtls_printf("\n  +++++++++++++++++ rsa keypair +++++++++++++++++\n\n");
 }
@@ -66,8 +66,8 @@ int main(void) {
 
   mbedtls_entropy_init(&entropy);
   mbedtls_ctr_drbg_init(&ctr_drbg);
-  mbedtls_rsa_init(&ctx, MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA256);
-
+  mbedtls_rsa_init(&ctx);
+  mbedtls_rsa_set_padding(&ctx, MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA256);
   ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
                               (const uint8_t *)pers, strlen(pers));
   assert_exit(ret == 0, ret);
@@ -81,14 +81,11 @@ int main(void) {
   dump_rsa_key(&ctx);
 
   ret = mbedtls_rsa_pkcs1_sign(&ctx, mbedtls_ctr_drbg_random, &ctr_drbg,
-                               MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256,
-                               sizeof(msg), msg, sig);
+                               MBEDTLS_MD_SHA256, 256 / 8, msg, sig);
   assert_exit(ret == 0, ret);
   dump_buf("  2. rsa generate signature:", sig, sizeof(sig));
 
-  ret = mbedtls_rsa_pkcs1_verify(&ctx, mbedtls_ctr_drbg_random, &ctr_drbg,
-                                 MBEDTLS_RSA_PUBLIC, MBEDTLS_MD_SHA256,
-                                 sizeof(msg), msg, sig);
+  ret = mbedtls_rsa_pkcs1_verify(&ctx, MBEDTLS_MD_SHA256, 256 / 8, msg, sig);
   assert_exit(ret == 0, ret);
   mbedtls_printf("  3. rsa verify signature ... ok\n\n");
 

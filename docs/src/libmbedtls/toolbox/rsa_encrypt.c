@@ -28,28 +28,36 @@ static void dump_rsa_key(mbedtls_rsa_context *ctx) {
   size_t olen;
   uint8_t buf[516];
   mbedtls_printf("\n  +++++++++++++++++ rsa keypair +++++++++++++++++\n\n");
-  mbedtls_mpi_write_string(&ctx->N, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_N, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("N: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->E, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_E, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("E: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->D, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_D, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("D: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->P, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_P, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("P: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->Q, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_Q, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("Q: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->DP, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_DP, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("DP: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->DQ, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_DQ, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("DQ: %s\n", buf);
 
-  mbedtls_mpi_write_string(&ctx->QP, 16, (char *)buf, sizeof(buf), &olen);
+  mbedtls_mpi_write_string(&ctx->private_QP, 16, (char *)buf, sizeof(buf),
+                           &olen);
   mbedtls_printf("QP: %s\n", buf);
   mbedtls_printf("\n  +++++++++++++++++ rsa keypair +++++++++++++++++\n\n");
 }
@@ -67,9 +75,9 @@ int main(void) {
 
   mbedtls_entropy_init(&entropy);
   mbedtls_ctr_drbg_init(&ctr_drbg);
+  mbedtls_rsa_init(&ctx);
   //指定填充方式为OAEP,单向散列算法为SHA256
-  mbedtls_rsa_init(&ctx, MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA256);
-
+  mbedtls_rsa_set_padding(&ctx, MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA256);
   ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
                               (const uint8_t *)pers, strlen(pers));
   assert_exit(ret == 0, ret);
@@ -83,14 +91,12 @@ int main(void) {
   dump_rsa_key(&ctx);
 
   ret = mbedtls_rsa_pkcs1_encrypt(&ctx, mbedtls_ctr_drbg_random, &ctr_drbg,
-                                  MBEDTLS_RSA_PUBLIC, strlen(msg),
-                                  (unsigned char *)msg, out);
+                                  strlen(msg), (unsigned char *)msg, out);
   assert_exit(ret == 0, ret);
   dump_buf("\n  2. RSA encryption ... ok", out, sizeof(out));
 
   ret = mbedtls_rsa_pkcs1_decrypt(&ctx, mbedtls_ctr_drbg_random, &ctr_drbg,
-                                  MBEDTLS_RSA_PRIVATE, &olen, out, out,
-                                  sizeof(out));
+                                  &olen, out, out, sizeof(out));
   assert_exit(ret == 0, ret);
 
   //'\0'截断
