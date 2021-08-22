@@ -23,7 +23,7 @@
 int main(void) {
   char *key = "abcdefghijklmnop";
   char *input = "WTF AES GCM Example code!";
-  char *iv = "abababababababab";
+  char *iv = "babababababab";
   char *add = "zxczxxxxxxxsdfadascxz";
   unsigned char output[64] = {0};
   unsigned char fin[64] = {0};

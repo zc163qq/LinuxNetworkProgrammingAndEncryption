@@ -2,7 +2,7 @@
 
 从本章开始，将陆续介绍密码学相关的知识。本章是此部分的第一章，在本章，将通过使用 mbedtls 来进行一些密码学基础知识的实践，通过实践，你也可以更好的掌握相关理论知识。
 
-mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security)/[DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security) 协议实施库，同时也是一个加密库与 X.509 证书处理库。对比与其他 TLS 实现如 OpenSSL，其更为针对嵌入式平台，因为它的体积可以很小。在 Arch Linux 上安装 AUR 包[mbedtls-git](https://aur.archlinux.org/packages/mbedtls-git/)即可使用。
+mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security)/[DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security) 协议实施库，同时也是一个加密库与 X.509 证书处理库。对比与其他 TLS 实现如 OpenSSL，其更为针对嵌入式平台，因为它的体积可以很小。在 Arch Linux 上安装 AUR 包[mbedtls-git](https://aur.archlinux.org/packages/mbedtls-git/)即可使用。mbedtls-git 是最新的,于 2021 年 7 月发布的 3.0 版本。本教程的样例均基于此最新版编写而成。如果你安装了 2.27 旧版[mbedtls](https://archlinux.org/packages/community/x86_64/mbedtls/)，请删除它并安装 mbedtls-git。如果你同时参考了其他过时教程，请以本教程为准。
 
 本章的主要目的是使用 mbedtls 来实践一些密码学工具，并以此使你可以得到对密码学相关知识的大体了解。本节先给出一些 mbedtls 的简单应用，代码和描述不能全部看懂也没关系，这仅仅是想使你可以得到一个较为直观的感受，后续小节会详细描述。
 
@@ -10,7 +10,7 @@ mbedtls 是一个跨平台的 [TLS](https://en.wikipedia.org/wiki/Transport_Laye
 
 ## 密码学简述
 
-本书不会描述任何密码学相关数学推导的理论知识，这是密码学家需要关心的事情，本书仅从程序员的角度讲述必须掌握的内容。在密码学中有六种主要的密码技术是在软件工程中经常使用的，这六种技术需要牢记，并理清它们之间的区别和关联：
+本书不会描述任何密码学相关数学推导的理论知识，这是密码学家需要关心的事情，如果你对它们感兴趣，可自行查阅相关资料，本书仅从程序员的角度讲述必须掌握的内容。在密码学中有六种主要的密码技术是在软件工程中经常使用的，这六种技术需要牢记，并理清它们之间的区别和关联：
 
 - 单向散列函数
 - 对称加密算法
@@ -50,7 +50,7 @@ AES_ECB_128 是一种对称加密算法，这里使用 AES_ECB_128 对一条消�
 - 身份认证算法 ECDSA
 - 对称加密算法 AES_256
 - 消息认证算法 GCM
-- 伪随机数算法 SHA384
+- 伪随机数算法 SHA384(使用单向散列函数可以编写出能够具备不可预测性的伪随机数序列)
 
 [ciphersuite_list](../src/libmbedtls/basic/ciphersuite_list.c ':include')
 

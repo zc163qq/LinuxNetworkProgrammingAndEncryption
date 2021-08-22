@@ -10,6 +10,7 @@
   - [通过 wireshark 抓包认识 socks5](/network/socks5_with_wireshark)
   - [socket 编程](/network/socket)
   - [更多 I/O 模式](/network/more_about_I-O)
+  - [Lab0](/network/lab0)
   <!-- - [阅读 microsocks 的源码](/network/read_with_microsocks) -->
 
 - mbedtls 库与密码学的应用与实践
@@ -17,6 +18,7 @@
   - [mbedtls 与密码学初步](/libmbedtls/basic)
   - [密码学工具箱](/libmbedtls/crypto_toolbox)
   - [TLS 客户端的实现](/libmbedtls/tls)
+  - [Lab1](/libmbedtls/lab1)
 
 - libsodium 库的应用与实践
 
