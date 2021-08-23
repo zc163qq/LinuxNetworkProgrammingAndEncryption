@@ -45,8 +45,9 @@ int main(void) {
   mbedtls_printf("\n  . setup rng ... ok\n");
 
   mbedtls_printf("\n  ! Generating large primes may take minutes!\n");
-  ret = mbedtls_mpi_gen_prime(&P, sizeof(prime) * 8, 1, mbedtls_ctr_drbg_random,
-                              &ctr_drbg);
+  ret = mbedtls_mpi_gen_prime(&P, sizeof(prime) * 8,
+                              MBEDTLS_MPI_GEN_PRIME_FLAG_DH,
+                              mbedtls_ctr_drbg_random, &ctr_drbg);
   assert_exit(ret == 0, ret);
 
   ret = mbedtls_mpi_sub_int(&Q, &P, 1);
