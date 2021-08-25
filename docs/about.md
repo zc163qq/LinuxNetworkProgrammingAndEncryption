@@ -8,7 +8,7 @@
 
 感谢持续十余年的，与 GFW 对抗中的广大开发者，如 [clowwindy](https://github.com/clowwindy)，[Victoria Raymond](https://github.com/VictoriaRaymond) 以及 [shadowsocks](https://github.com/shadowsocks) 和 [v2ray](https://github.com/v2ray)/[v2fly](https://github.com/v2fly) 社区的各个开发者。你们的代码为后来人提供了太多的启示，同时你们敢于对抗，争取自由的理念也必将激励更多的有识之士投入到这场斗争中来。
 
-Telegram 电报群: [篝之雾枝的咕咕小屋](https://t.me/kdwu1fan)
+Telegram 电报群: [篝之雾枝的咕咕小屋](https://t.me/FSF_Ministry_of_Truth)
 
 ## 更新日志
 
