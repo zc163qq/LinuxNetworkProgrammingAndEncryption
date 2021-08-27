@@ -98,13 +98,37 @@
         plugins: [
           function (hook, vm) {
             hook.beforeEach(function (html) {
-              var url =
+              let edit_url =
                 'https://github.com/ArchLinuxStudio/LinuxNetworkProgrammingAndEncryption/blob/master/docs/' +
                 vm.route.file;
-              var editHtml = '[📝 编辑本文](' + url + ')\n';
+              let editHtml = '[📝 编辑本文](' + edit_url + ')\n';
+
+              let client_id = 'e1f0ea79ea66351131ae';
+              let client_secret = '7b8509854c085a1100c8cd0b2ae958264be658fc';
+
+              let date_url =
+                'https://api.github.com/repos/ArchLinuxStudio/LinuxNetworkProgrammingAndEncryption/commits?per_page=1&path=docs/' +
+                vm.config.basePath +
+                encodeURIComponent(vm.route.file);
+
+              fetch(date_url, {
+                headers: {
+                  Authorization: `${client_id}:${client_secret}`,
+                },
+              })
+                .then((response) => {
+                  return response.json();
+                })
+                .then((commits) => {
+                  let modified = commits[0]['commit']['committer'][
+                    'date'
+                  ].slice(0, 10);
+                  document.getElementById('last-modified').textContent =
+                    '更新日期: ' + modified;
+                });
 
               return (
-                '<span>更新日期 {docsify-updated}</span> ' +
+                '<span id="last-modified">更新日期: 获取中</span>' +
                 '\n' +
                 html +
                 '\n----\n' +
@@ -143,9 +167,12 @@
     </script>
 
     <script>
+      let client_id = 'e1f0ea79ea66351131ae';
+      let client_secret = '7b8509854c085a1100c8cd0b2ae958264be658fc';
+
       let props = {
-        clientID: 'e1f0ea79ea66351131ae',
-        clientSecret: '7b8509854c085a1100c8cd0b2ae958264be658fc',
+        clientID: client_id,
+        clientSecret: client_secret,
         repo: 'CProgrammingEssenceComments',
         owner: 'ArchLinuxStudio',
         admin: ['TakoTakoo'],
