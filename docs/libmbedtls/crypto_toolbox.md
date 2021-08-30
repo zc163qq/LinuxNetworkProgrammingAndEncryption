@@ -179,6 +179,8 @@ RSA 数字签名算法基于 RSA 密钥系统实现。RSA 数字签名过程与 
 
 注意，代码中的 mbedtls_rsa_pkcs1_sign 函数在 mbedtls 3.0 中，需要指定正确的 hashlen，它的大小要与使用的哈希函数的输出大小相同，这里使用 SHA-256 算法，所以指定为 256/8 字节。
 
+如果你认真学习了本书内容，可能会发现在 RSA 非对称加密中和 RSA 签名中都使用了`MBEDTLS_RSA_PKCS_V21`填充方式，但是描述中却分别使用了 OAEP 和 PSS,这并没有错,在 mbedtls 中，它分别对应 RSA 加密以及 RSA 签名的一种模式。
+
 [rsa_sign](../src/libmbedtls/toolbox/rsa_sign.c ':include')
 
 ---
