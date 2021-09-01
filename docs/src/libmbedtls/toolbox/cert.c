@@ -20,12 +20,15 @@ static int my_verify(void *data, mbedtls_x509_crt *crt, int depth,
                      uint32_t *flags) {
   ((void)data);
   char buf[1024];
+
+  //验证成功
   int ret = mbedtls_x509_crt_info(buf, sizeof(buf) - 1, "      ", crt);
   mbedtls_printf("  . Verify requested for (Depth %d) ... ok\n", depth);
   for (uint32_t i = 0; i < ret; i++) {
     mbedtls_printf("%c", buf[i]);
   }
 
+  //验证失败
   if ((*flags) != 0) {
     ret = mbedtls_x509_crt_verify_info(buf, sizeof(buf), "  ! ", *flags);
     for (uint32_t i = 0; i < ret; i++) {
