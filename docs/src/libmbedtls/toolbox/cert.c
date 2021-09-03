@@ -43,10 +43,11 @@ static int my_verify(void *data, mbedtls_x509_crt *crt, int depth,
 int main(void) {
   int ret = 0;
   uint32_t flags = 0;
-  mbedtls_x509_crt cert, cacert;
+  mbedtls_x509_crt cert, cacert, wrong_ca;
 
   mbedtls_x509_crt_init(&cert);
   mbedtls_x509_crt_init(&cacert);
+  mbedtls_x509_crt_init(&wrong_ca);
 
   //用户证书
   ret = mbedtls_x509_crt_parse(&cert, (unsigned char *)bob_cert,
@@ -55,10 +56,19 @@ int main(void) {
   // CA证书
   ret = mbedtls_x509_crt_parse(&cacert, (unsigned char *)ca_cert,
                                sizeof(ca_cert));
+
+  // 错误的CA证书
+  ret = mbedtls_x509_crt_parse(&wrong_ca, (unsigned char *)wrong_ca_cert,
+                               sizeof(wrong_ca_cert));
   assert_exit(ret == 0, ret);
   mbedtls_printf("\n  . Loading the certificate(s) ... ok\n\n");
 
   ret = mbedtls_x509_crt_verify(&cert, &cacert, NULL, NULL, &flags, my_verify,
+                                NULL);
+
+  mbedtls_printf("\n\n----------------\n\n");
+
+  ret = mbedtls_x509_crt_verify(&cert, &wrong_ca, NULL, NULL, &flags, my_verify,
                                 NULL);
   assert_exit(ret == 0, ret);
 
