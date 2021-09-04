@@ -13,7 +13,3 @@ Telegram 电报群: [篝之雾枝的咕咕小屋](https://t.me/FSF_Ministry_of_T
 ## 更新日志
 
 - 2021-03-11 项目启动
-
-## 捐赠
-
-USDT: 0xb8916cf64a2e260176d83a62600844f06dffa8dd
