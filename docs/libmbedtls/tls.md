@@ -4,7 +4,7 @@
 
 [client_without_tls](../src/libmbedtls/tls/client_without_tls.c ':include')
 
-接下来将使用 mbedtls 为此程序加入 TLS,从而可以请求在某一端口 https 的网页。需要注意，这里的例子是一个网站的真是例子，其证书链共有三级，而实际上对服务器的验证只进行到中间一级的 CA 认证节点即可完成，不必追溯到顶部的 CA 根节点。
+接下来将使用 mbedtls 为此程序加入 TLS,从而可以请求在某一端口 https 的网页。需要注意，这里的例子是一个网站的真实例子，其证书链共有三级，而实际上对服务器的验证只进行到中间一级的 CA 认证节点即可完成，不必追溯到顶部的 CA 根节点。
 
 [client_with_tls_with_verify](../src/libmbedtls/tls/client_with_tls_with_verify.c ':include')
 
